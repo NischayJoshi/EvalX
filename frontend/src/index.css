@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* Remove shadcn heavy focus ring */
+input:focus,
+button:focus,
+select:focus,
+textarea:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Light subtle border on focus (premium look) */
+input:focus {
+  border-color: #bdbdbd !important; /* light grey */
+}
+
+button:focus {
+  border-color: #bdbdbd !important;
+}

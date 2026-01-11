@@ -26,7 +26,6 @@ from reportlab.pdfgen import canvas
 OPEN_AI_KEY= os.getenv("OPENAI_API_KEY", "")
 
 
-# ------------ GLOBALS ------------
 OPENAI_KEY = OPEN_AI_KEY
 if not OPENAI_KEY:
     raise RuntimeError("OPENAI_API_KEY missing")
@@ -37,7 +36,6 @@ executor = ThreadPoolExecutor(max_workers=6)
 router = APIRouter(tags=["github-evaluator"])
 
 
-# ------------ BASIC UTILS ------------
 def safe_rmtree(path: str):
     if not os.path.exists(path):
         return
@@ -60,7 +58,6 @@ def clone_repo(url: str) -> str:
     return repo_path
 
 
-# ------------ REPO SCAN ------------
 def get_code_chunks(repo: str) -> List[str]:
     exts = [".py", ".js", ".ts", ".html", ".css", ".cpp", ".java"]
     chunks = []
@@ -137,7 +134,6 @@ def plagiarism_score(repo: str) -> float:
         return 0.0
 
 
-# ------------ CODE SMELL DETECTION ------------
 def detect_code_smells(radon_raw: str, pylint_score: float, plag: float, structure: Dict) -> Dict[str, Any]:
     smells = []
 
@@ -218,7 +214,6 @@ def compute_risk_score(plag: float, pylint_score: float, code_smells: Dict[str, 
     return round(max(0.0, min(100.0, base)), 2)
 
 
-# ------------ LLM EVAL ------------
 async def llm_code_rating(desc: str, chunks: List[str]):
     logic, relevance, style = [], [], []
     feedback = []
@@ -250,7 +245,6 @@ async def llm_code_rating(desc: str, chunks: List[str]):
     return sum(logic)/len(logic), sum(relevance)/len(relevance), sum(style)/len(style), feedback
 
 
-# ------------ MARKDOWN MENTOR ------------
 async def generate_markdown_mentor(desc: str, result: dict) -> str:
     system = (
         "You are a senior software architect.\n"
@@ -302,7 +296,6 @@ async def generate_markdown_mentor(desc: str, result: dict) -> str:
     return res.choices[0].message.content
 
 
-# ------------ AI REWRITE SUGGESTIONS ------------
 async def generate_rewrite_suggestions(desc: str, chunks: List[str], code_smells: Dict[str, Any]) -> str:
     focus = "\n\n".join(chunks[:3])
 
@@ -341,7 +334,6 @@ async def generate_rewrite_suggestions(desc: str, chunks: List[str], code_smells
     return res.choices[0].message.content
 
 
-# ------------ GRADING RUBRIC ------------
 def rubric_from_score(score: float) -> Dict[str, Any]:
     if score >= 90:
         grade = "A+"
@@ -372,7 +364,6 @@ def rubric_from_score(score: float) -> Dict[str, Any]:
     }
 
 
-# ------------ FINAL SCORE ------------
 def compute_final_score(plag, logic, rel, style, pylint, structure):
     structure_score = (
         20 * structure["has_readme"] +
@@ -388,7 +379,6 @@ def compute_final_score(plag, logic, rel, style, pylint, structure):
     )
 
 
-# ------------ PDF REPORT ------------
 def generate_pdf_report(result: Dict[str, Any]) -> bytes:
     tmp_fd, tmp_path = tempfile.mkstemp(suffix=".pdf")
     os.close(tmp_fd)
@@ -444,7 +434,6 @@ def generate_pdf_report(result: Dict[str, Any]) -> bytes:
     return data
 
 
-# ------------ BLOCKING ORCHESTRATOR (NO LLM) ------------
 def evaluate_repo_blocking(url: str, desc: str):
     repo = clone_repo(url)
     try:
@@ -459,7 +448,6 @@ def evaluate_repo_blocking(url: str, desc: str):
         raise e
 
 
-# ------------ FASTAPI ENDPOINT ------------
 @router.post("/evaluate")
 async def evaluate_repo(request: Request):
     try:

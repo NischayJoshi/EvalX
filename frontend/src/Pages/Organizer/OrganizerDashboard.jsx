@@ -19,9 +19,6 @@ export default function OrganizerDashboard() {
   const [name, setName] = useState("");
   const [user, setUser] = useState(null);
 
-  // -----------------------------
-  // FIX: Load user profile
-  // -----------------------------
   const getUser = async () => {
     try {
       const res = await api.get("/org/profile", { withCredentials: true });
@@ -45,9 +42,6 @@ export default function OrganizerDashboard() {
   //   if (stored && !name) setName(stored);
   // }, [name]);
 
-  // -----------------------------
-  // Events (UNCHANGED as requested)
-  // -----------------------------
   const [events, setEvents] = useState([]);
 const [eventsLoading, setEventsLoading] = useState(true);
 

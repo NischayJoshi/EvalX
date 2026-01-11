@@ -46,9 +46,6 @@ export default function CreateEventPanel({ onCreate }) {
       ),
     }));
 
-  // ---------------------------------------------------------
-  // AI Autofill Integration
-  // ---------------------------------------------------------
   const handleAiGenerate = async () => {
     if (!aiPrompt.trim()) return;
 
@@ -89,9 +86,6 @@ export default function CreateEventPanel({ onCreate }) {
     }
   };
 
-  // ---------------------------------------------------------
-  // VALIDATION
-  // ---------------------------------------------------------
   const validate = () => {
     const err = {};
 
@@ -128,9 +122,6 @@ export default function CreateEventPanel({ onCreate }) {
     return Object.keys(err).length === 0;
   };
 
-  // ---------------------------------------------------------
-  // SUBMIT
-  // ---------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -179,18 +170,12 @@ export default function CreateEventPanel({ onCreate }) {
     }
   };
 
-  // ---------------------------------------------------------
-  // Round Types
-  // ---------------------------------------------------------
   const ROUND_TYPES = [
     { id: "ppt", label: "PPT Submission", icon: <FileText size={20} /> },
     { id: "repo", label: "Repository + Video", icon: <FolderGit2 size={20} /> },
     { id: "viva", label: "Virtual Viva", icon: <Mic size={20} /> },
   ];
 
-  // ---------------------------------------------------------
-  // File Input Component
-  // ---------------------------------------------------------
   const FileInput = ({ label, file, onChange }) => (
     <div>
       {!file ? (
@@ -229,9 +214,6 @@ export default function CreateEventPanel({ onCreate }) {
     </div>
   );
 
-  // ---------------------------------------------------------
-  // UI
-  // ---------------------------------------------------------
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

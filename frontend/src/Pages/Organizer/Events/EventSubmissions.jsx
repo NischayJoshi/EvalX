@@ -20,22 +20,17 @@ export default function EventSubmissions({
   const activeRound =
     responses.rounds?.find((r) => r.id === activeRoundId) || null;
 
-  // --------------------------
-  // FILTER + SEARCH + SORT
-  // --------------------------
   const filtered = useMemo(() => {
     if (!activeRound) return [];
 
     let rows = [...activeRound.submissions];
 
-    // search filter
     if (search.trim()) {
       rows = rows.filter((s) =>
         s.teamName.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    // sorting
     rows.sort((a, b) => {
       let valA = sortBy === "team" ? a.teamName : a.score ?? 0;
       let valB = sortBy === "team" ? b.teamName : b.score ?? 0;
@@ -62,9 +57,7 @@ export default function EventSubmissions({
   return (
     <div className="space-y-5">
 
-      {/* ------------------------ */}
-      {/* ROUND SELECTOR */}
-      {/* ------------------------ */}
+      {/* Round Selector */}
       <div className="flex gap-2 overflow-x-auto pb-2">
         {responses.rounds.map((round) => (
           <button
@@ -81,9 +74,7 @@ export default function EventSubmissions({
         ))}
       </div>
 
-      {/* ------------------------ */}
-      {/* SEARCH + SORT BAR */}
-      {/* ------------------------ */}
+      {/* Search + Sort Bar */}
       <div className="flex items-center justify-between">
         {/* search */}
         <div className="relative flex-1">
@@ -122,9 +113,6 @@ export default function EventSubmissions({
         </div>
       </div>
 
-      {/* ------------------------ */}
-      {/* TABLE */}
-      {/* ------------------------ */}
       {!filtered.length ? (
         <div className="text-neutral-500 text-sm py-10 text-center">
           No submissions for this round.

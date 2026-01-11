@@ -1,0 +1,50 @@
+# FastAPI and ASGI
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Database
+motor>=3.3.0
+pymongo>=4.6.0
+
+# Authentication
+pyjwt>=2.8.0
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.6
+
+# AI/ML
+openai>=1.10.0
+langchain>=0.1.0
+langchain-openai>=0.0.5
+
+# Code Analysis
+pylint>=3.0.0
+radon>=6.0.0
+jscpd>=0.0.1
+
+# PDF Generation
+reportlab>=4.0.0
+PyPDF2>=3.0.0
+
+# File Handling
+python-pptx>=0.6.21
+cloudinary>=1.38.0
+
+# Async Task Queue (Scalability)
+celery>=5.3.0
+redis>=5.0.0
+
+# WebSocket Support
+websockets>=12.0
+
+# Utilities
+python-dotenv>=1.0.0
+httpx>=0.26.0
+aiofiles>=23.0.0
+requests>=2.31.0
+
+# Speech Processing
+openai-whisper>=20231117
+
+# Development
+pytest>=7.4.0
+pytest-asyncio>=0.23.0

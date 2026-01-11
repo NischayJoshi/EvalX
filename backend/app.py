@@ -3,7 +3,10 @@ EvalX Backend Application
 =========================
 
 Main FastAPI application with all routes registered.
-Includes analytics features from khushi branch and domain evaluators from main.
+Includes:
+- Analytics features (from khushi branch)
+- Domain evaluators (from main)
+- Scalability features: async submissions, websocket, celery (from sneha branch)
 
 Run with:
     uvicorn app:app --reload --port 8000
@@ -31,6 +34,10 @@ from graph.ppt_evaluator import router as ppt_router
 
 # Import analytics router (from khushi)
 from routes.analytics import router as analytics_router
+
+# Import scalability routers (from sneha)
+from routes.async_submissions import router as async_submissions_router
+from routes.websocket import router as websocket_router
 
 # Configure logging
 logging.basicConfig(
@@ -90,6 +97,10 @@ app.include_router(
 # Analytics Routes (from khushi)
 app.include_router(analytics_router, prefix="/api", tags=["Analytics"])
 
+# Scalability Routes (from sneha)
+app.include_router(async_submissions_router, prefix="/api/submissions", tags=["Async Submissions"])
+app.include_router(websocket_router, tags=["WebSocket"])
+
 
 @app.get("/", tags=["Health"])
 async def root():
@@ -103,7 +114,12 @@ async def health_check():
     return {
         "status": "healthy",
         "version": "1.0.0",
-        "services": {"domain_evaluators": "active", "analytics": "active"},
+        "services": {
+            "domain_evaluators": "active",
+            "analytics": "active",
+            "async_queue": "active",
+            "websocket": "active",
+        },
     }
 
 

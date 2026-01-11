@@ -335,7 +335,7 @@ async def submit_repo(
     video: str = Form(...),
     user=Depends(get_current_user)
 ):
-    # ---------- USER / TEAM VALIDATION ----------
+
     user_doc = await users_collection.find_one({"_id": ObjectId(user["id"])})
     if not user_doc:
         raise HTTPException(404, "User not found")
@@ -357,7 +357,6 @@ async def submit_repo(
     if existing:
         raise HTTPException(400, "Repository already submitted for this round")
 
-    # ---------- INSERT INITIAL SUBMISSION ----------
     submission = {
         "eventId": event_id,
         "teamId": str(team["_id"]),
@@ -372,7 +371,6 @@ async def submit_repo(
     result = await submissions_collection.insert_one(submission)
     submission_id = result.inserted_id
 
-    # ---------- RUN THE EVALUATOR ----------
     loop = asyncio.get_event_loop()
 
     try:
@@ -428,7 +426,6 @@ async def submit_repo(
 
         report_pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
 
-        # ---------- FINAL AI EVALUATION JSON ----------
         evaluation = {
             "final_score": final_score,
             "rubric": rubric,
@@ -447,7 +444,6 @@ async def submit_repo(
             "files_analyzed": len(chunks),
         }
 
-        # ---------- SAVE RESULT INTO SAME SUBMISSION ----------
         await submissions_collection.update_one(
             {"_id": submission_id},
             {

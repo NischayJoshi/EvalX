@@ -3,6 +3,10 @@ import cloudinary.uploader
 from middlewares.auth_required import get_user as get_current_user, auth_required
 from config.db import db
 from bson import ObjectId
+from fastapi import APIRouter, Depends, HTTPException, Form
+from datetime import datetime
+from bson import ObjectId
+from middlewares.auth_required import get_user as get_current_user, auth_required
 from utils.serializers import serialize_doc,serialize_docs
 
 router = APIRouter()
@@ -129,7 +133,6 @@ async def create_team(event_id: str, teamName: str = Form(...), user=Depends(get
 
     result = await teams_collection.insert_one(team)
     team["_id"] = result.inserted_id
-    # add convenient fields
     team["teamId"] = str(result.inserted_id)
     team["teamName"] = teamName
     team["leaderId"] = user_id
@@ -360,12 +363,6 @@ async def registred_event(user=Depends(get_current_user)):
             continue
 
     return {"success": True, "data": serialize_docs(events)}
-
-from fastapi import APIRouter, Depends, HTTPException, Form
-from datetime import datetime
-from bson import ObjectId
-from middlewares.auth_required import get_user as get_current_user, auth_required
-
 
 
 @router.post("/events/{event_id}/teams/{team_id}/requests/send")

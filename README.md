@@ -673,5 +673,15 @@ evalx/
 - Frontend deployment at https://eval-x.vercel.app/
 
 ---
+## 👥 The Team
+
+- **Arju Srivastava** (@angermaster11 / @angermaster19)
+- **Nischay Joshi** (@NischayJoshi / @Nischay-VideoDB)
+- **Khushi Gangwar** (@Pythonag0123)
+- **Sneha Verma** (@Sneha11084)
+
+*Note: Due to development across different environments, some members have contributed using multiple GitHub handles as noted above.*
+
+---
 
 **Made for "The Nest" Hackathon | December 2025**

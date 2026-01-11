@@ -11,10 +11,6 @@ if not OPEN_AI_KEY:
 
 client = OpenAI(api_key=OPEN_AI_KEY)
 
-
-# -------------------------------
-# MAIN FUNCTION: TEXT → MP3 AUDIO
-# -------------------------------
 async def text_to_speech_stream(text: str):
     """
     Converts text to speech (mp3) and streams it.
@@ -24,14 +20,12 @@ async def text_to_speech_stream(text: str):
     if not text or not text.strip():
         raise HTTPException(400, "Empty text for TTS")
 
-    # Add Indian-style phrasing
     text = f"Please speak this in a natural Indian English accent: {text}"
 
-    # Blocking call offloaded to thread
     def _call_tts():
         resp = client.audio.speech.create(
-            model="tts-1",      # Fastest TTS model
-            voice="alloy",      # Default voice (clear, neutral)
+            model="tts-1",    
+            voice="alloy",    
             format="mp3",
             input=text,
         )

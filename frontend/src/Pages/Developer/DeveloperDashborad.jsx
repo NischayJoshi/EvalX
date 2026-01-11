@@ -96,7 +96,7 @@ export default function DeveloperDashborad() {
   return (
     <div className="min-h-screen bg-neutral-100">
 
-      {/* NAVBAR — Premium */}
+      {/* Navbar */}
       <nav className="w-full bg-white border-b border-neutral-200 px-8 py-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <FiLayers size={26} className="text-neutral-800" />
@@ -121,7 +121,7 @@ export default function DeveloperDashborad() {
         </div>
       </nav>
 
-      {/* TABS — Clean, No Scroll */}
+      {/* Tabs */}
       <div className="w-full bg-white border-b border-neutral-200 shadow-sm">
         <div className="max-w-6xl mx-auto flex gap-10 px-8">
 
@@ -153,7 +153,7 @@ export default function DeveloperDashborad() {
         </div>
       </div>
 
-      {/* CONTENT */}
+      {/* Content */}
       <main className="p-8 flex justify-center">
         <div className="w-full max-w-6xl">
           <AnimatePresence mode="wait">

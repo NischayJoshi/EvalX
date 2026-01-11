@@ -61,7 +61,7 @@ export default function TeamSubmissions({ eventId }) {
   return (
     <div className="space-y-8">
 
-      {/* ---------------- PPT SUBMISSION / RESULTS ---------------- */}
+      {/* PPT Submission */}
       <section className="border rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold">Round 1: PPT Submission</h3>
@@ -147,7 +147,6 @@ export default function TeamSubmissions({ eventId }) {
             )}
           </div>
         ) : (
-          // ---------------- PPT UPLOAD FORM ----------------
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -174,11 +173,11 @@ export default function TeamSubmissions({ eventId }) {
             >
               {loading.ppt ? "Uploading..." : "Submit PPT"}
             </button>
-          </form>
+          </div>
         )}
       </section>
 
-      {/* ---------------- REPO + VIDEO ---------------- */}
+      {/* Repo + Video */}
       <section className="border rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold">Round 2: Repo & Video</h3>

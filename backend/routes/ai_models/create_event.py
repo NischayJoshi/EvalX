@@ -16,9 +16,6 @@ class EventDetails(BaseModel):
     event_details: str
 
 
-# -------------------------------------------------------
-# 1) Generate short summary
-# -------------------------------------------------------
 @router.post("/create-event-summary")
 async def create_event_summary(data: EventDetails):
     if not data.event_details.strip():
@@ -37,9 +34,6 @@ async def create_event_summary(data: EventDetails):
     return {"summary": summary.strip()}
 
 
-# -------------------------------------------------------
-# 2) Generate full event object (JSON)
-# -------------------------------------------------------
 @router.post("/create-event-ai")
 async def create_event_ai(data: EventDetails):
     if not data.event_details.strip():

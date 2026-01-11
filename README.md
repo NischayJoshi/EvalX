@@ -139,64 +139,74 @@ flowchart LR
 
 ```mermaid
 graph TB
-    subgraph "Client Layer"
-        U1[👨‍💼 Organizer Dashboard]
-        U2[👨‍💻 Developer Dashboard]
-        U3[📊 Analytics Views]
+    subgraph CLIENT["👥 Client Layer"]
+        U1["Organizer Dashboard"]
+        U2["Developer Dashboard"]
+        U3["Analytics Views"]
     end
     
-    subgraph "Frontend"
-        FE[React 19 + Vite<br/>TailwindCSS + Framer Motion]
+    subgraph FRONTEND["🖥️ Frontend"]
+        FE["React 19 + Vite"]
     end
     
-    subgraph "API Gateway"
-        API[FastAPI Backend<br/>Async + JWT Auth]
-        WS[WebSocket Server<br/>Real-time Updates]
+    subgraph GATEWAY["🔌 API Gateway"]
+        API["FastAPI Backend"]
+        WS["WebSocket Server"]
     end
     
-    subgraph "Message Queue"
-        RQ[Redis Queue<br/>Task Broker]
+    subgraph QUEUE["📬 Message Queue"]
+        RQ["Redis Queue"]
     end
     
-    subgraph "Worker Pool"
-        W1[PPT Worker<br/>Concurrency: 4]
-        W2[GitHub Worker<br/>Concurrency: 2]
-        W3[Viva Worker<br/>Concurrency: 2]
+    subgraph WORKERS["⚙️ Worker Pool"]
+        W1["PPT Worker x4"]
+        W2["GitHub Worker x2"]
+        W3["Viva Worker x2"]
     end
     
-    subgraph "AI Processing Layer"
-        E1[PPT Evaluator<br/>GPT-4o-mini Vision]
-        E2[GitHub Auditor<br/>Radon + Pylint + AI]
-        E3[Domain Evaluators<br/>5 Specialized Modules]
-        E4[Interview Engine<br/>Whisper + GPT + TTS]
-        E5[Analytics Engine<br/>MongoDB Aggregation]
+    subgraph AI["🤖 AI Processing"]
+        E1["PPT Evaluator"]
+        E2["GitHub Auditor"]
+        E3["Domain Evaluators"]
+        E4["Interview Engine"]
+        E5["Analytics Engine"]
     end
     
-    subgraph "Data Layer"
-        DB[(MongoDB Atlas<br/>Primary Storage)]
-        CACHE[(Redis Cache<br/>TTL-based)]
-        CDN[Cloudinary CDN<br/>File Storage]
+    subgraph DATA["💾 Data Layer"]
+        DB[("MongoDB Atlas")]
+        CACHE[("Redis Cache")]
+        CDN["Cloudinary CDN"]
     end
     
-    subgraph "External Services"
-        OAI[OpenAI API]
-        GROQ[Groq API]
-        GH[GitHub API]
+    subgraph EXTERNAL["🌐 External"]
+        OAI["OpenAI API"]
+        GROQ["Groq API"]
+        GH["GitHub API"]
     end
     
-    U1 & U2 & U3 --> FE
-    FE -->|REST API| API
-    FE <-->|WebSocket| WS
+    U1 --> FE
+    U2 --> FE
+    U3 --> FE
+    FE -->|"REST"| API
+    FE <-->|"WS"| WS
     API --> RQ
-    RQ --> W1 & W2 & W3
+    RQ --> W1
+    RQ --> W2
+    RQ --> W3
     W1 --> E1
-    W2 --> E2 & E3
+    W2 --> E2
+    W2 --> E3
     W3 --> E4
     API --> E5
-    E1 & E2 & E3 & E4 --> OAI
+    E1 --> OAI
+    E2 --> OAI
+    E3 --> OAI
+    E4 --> OAI
     API --> GROQ
     E2 --> GH
-    W1 & W2 & W3 --> DB
+    W1 --> DB
+    W2 --> DB
+    W3 --> DB
     API --> CACHE
     API --> CDN
     WS --> CACHE
@@ -243,134 +253,100 @@ sequenceDiagram
 #### Level 0: Context Diagram
 
 ```mermaid
-flowchart LR
-    subgraph External["External Entities"]
-        ORG[("👨‍💼 Organizer")]
-        DEV[("👨‍💻 Developer/Team")]
-        AI_EXT[("🤖 AI Services")]
-    end
+flowchart TB
+    ORG["👨‍💼 ORGANIZER"]
+    DEV["👨‍💻 DEVELOPER/TEAM"]
+    AI_EXT["🤖 AI SERVICES"]
     
-    EVALX[["⚡ EvalX Platform"]]
+    EVALX(["⚡ EvalX Platform"])
     
-    ORG -->|"Event Config\nJudging Criteria"| EVALX
-    EVALX -->|"Analytics\nLeaderboards\nReports"| ORG
+    ORG -->|"Event Config, Criteria"| EVALX
+    EVALX -->|"Analytics, Leaderboards"| ORG
     
-    DEV -->|"PPT Upload\nGitHub URL\nVoice Answers"| EVALX
-    EVALX -->|"Scores\nFeedback\nMentor Reports"| DEV
+    DEV -->|"PPT, GitHub, Voice"| EVALX
+    EVALX -->|"Scores, Feedback"| DEV
     
-    EVALX <-->|"Code Analysis\nPPT Vision\nTranscription"| AI_EXT
+    EVALX <-->|"Vision, NLP, Analysis"| AI_EXT
 ```
+
+**Data Flows Summary:**
+
+| From | To | Data |
+|------|-----|------|
+| Organizer | EvalX | Event configuration, Judging criteria, Team invites |
+| EvalX | Organizer | Analytics dashboard, Leaderboards, Export reports |
+| Developer | EvalX | PPT upload, GitHub URL, Voice answers, PDF docs |
+| EvalX | Developer | Evaluation scores, AI feedback, Mentor reports |
+| EvalX | AI Services | Code for analysis, Slides for vision, Audio for STT |
+| AI Services | EvalX | Analysis results, Vision insights, Transcriptions |
 
 #### Level 1: Detailed Data Flow
 
 ```mermaid
-flowchart TB
-    subgraph Inputs["📥 Data Inputs"]
-        I1[PPT File]
-        I2[GitHub URL]
-        I3[Voice Recording]
-        I4[Project PDF]
+flowchart LR
+    subgraph INPUT["📥 INPUTS"]
+        I1["PPT"]
+        I2["GitHub"]
+        I3["Voice"]
+        I4["PDF"]
     end
-    
-    subgraph Process1["1.0 Submission Handler"]
-        P1A[Validate Input]
-        P1B[Create Record]
-        P1C[Queue Task]
+
+    subgraph PROCESS["⚙️ PROCESSING"]
+        P1["1.0 Submit"]
+        P2["2.0 PPT Eval"]
+        P3["3.0 GitHub Audit"]
+        P4["4.0 Interview"]
+        P5["5.0 Domain"]
+        P6["6.0 Analytics"]
     end
-    
-    subgraph Process2["2.0 PPT Evaluator"]
-        P2A[Extract Slides]
-        P2B[Vision Analysis]
-        P2C[Score Calculation]
+
+    subgraph STORE["💾 STORAGE"]
+        DB[("MongoDB")]
+        RD[("Redis")]
+        CD[("Cloudinary")]
     end
-    
-    subgraph Process3["3.0 GitHub Auditor"]
-        P3A[Clone Repository]
-        P3B[Static Analysis]
-        P3C[AI Code Review]
-        P3D[Plagiarism Check]
+
+    subgraph OUTPUT["📤 OUTPUTS"]
+        O1["Scores"]
+        O2["Reports"]
+        O3["Leaderboard"]
     end
+
+    I1 --> P1
+    I2 --> P1
+    I3 --> P1
+    I4 --> P1
+    P1 --> DB
+    P1 --> CD
+    P1 --> RD
     
-    subgraph Process4["4.0 Interview Engine"]
-        P4A[Generate Questions]
-        P4B[Transcribe Audio]
-        P4C[Evaluate Answers]
-    end
+    RD --> P2
+    RD --> P3
+    RD --> P4
+    P3 --> P5
+    P2 --> DB
+    P3 --> DB
+    P4 --> DB
+    P5 --> DB
     
-    subgraph Process5["5.0 Domain Evaluator"]
-        P5A[Detect Domain]
-        P5B[Pattern Matching]
-        P5C[Domain Scoring]
-    end
+    DB --> P6
+    P6 --> DB
     
-    subgraph Process6["6.0 Analytics Engine"]
-        P6A[Aggregate Scores]
-        P6B[Generate Reports]
-        P6C[Detect Anomalies]
-    end
-    
-    subgraph DataStores["💾 Data Stores"]
-        D1[(MongoDB\nSubmissions)]
-        D2[(MongoDB\nEvents)]
-        D3[(Redis\nCache)]
-        D4[(Cloudinary\nFiles)]
-    end
-    
-    subgraph Outputs["📤 Data Outputs"]
-        O1[Evaluation Scores]
-        O2[Mentor Reports]
-        O3[Leaderboard]
-        O4[Analytics Dashboard]
-        O5[CSV Exports]
-    end
-    
-    %% Input Flows
-    I1 --> P1A
-    I2 --> P1A
-    I3 --> P1A
-    I4 --> P1A
-    
-    P1A --> P1B
-    P1B --> D1
-    P1B --> D4
-    P1C --> D3
-    
-    %% Processing Flows
-    D3 --> P2A
-    P2A --> P2B
-    P2B --> P2C
-    P2C --> D1
-    
-    D3 --> P3A
-    P3A --> P3B
-    P3B --> P3C
-    P3C --> P3D
-    P3D --> D1
-    
-    D3 --> P4A
-    P4A --> P4B
-    P4B --> P4C
-    P4C --> D1
-    
-    P3D --> P5A
-    P5A --> P5B
-    P5B --> P5C
-    P5C --> D1
-    
-    %% Analytics Flows
-    D1 --> P6A
-    D2 --> P6A
-    P6A --> P6B
-    P6B --> P6C
-    P6C --> D1
-    
-    %% Output Flows
-    D1 --> O1
-    D1 --> O2
-    D1 --> O3
-    P6B --> O4
-    P6B --> O5
+    DB --> O1
+    DB --> O2
+    DB --> O3
 ```
+
+**Process Details:**
+
+| Process | Function | Input | Output |
+|---------|----------|-------|--------|
+| **1.0 Submit** | Validate & queue submissions | PPT, GitHub URL, Voice, PDF | Task queued in Redis |
+| **2.0 PPT Eval** | Vision-based slide analysis | PPT slides | Presentation score |
+| **3.0 GitHub Audit** | 9-phase code analysis | Repository URL | Code quality metrics |
+| **4.0 Interview** | Voice Q&A evaluation | Audio recordings | Interview scores |
+| **5.0 Domain** | Specialized pattern matching | Code repository | Domain-specific score |
+| **6.0 Analytics** | Aggregation & anomaly detection | All scores | Reports & exports |
 
 #### Data Dictionary
 
@@ -387,35 +363,54 @@ flowchart TB
 
 ### API Route Architecture
 
+| Category | Endpoints | Description |
+|----------|-----------|-------------|
+| **Authentication** | `POST /api/auth/signup`<br>`POST /api/auth/login` | User registration & JWT token generation |
+| **Dashboard** | `GET /api/dashboard/*` | User-specific dashboard data |
+| **Developer** | `GET/POST /api/developer/*` | Developer operations & events |
+| **Team** | `GET/POST /api/team/*` | Team management & submissions |
+| **PPT Evaluation** | `POST /api/ppt/*` | Presentation upload & analysis |
+| **GitHub Audit** | `POST /api/github/*` | Repository evaluation |
+| **Interview** | `POST /api/interview/*` | Voice interview sessions |
+| **Domain Eval** | `POST /api/domain-evaluation/*` | Specialized domain analysis |
+| **Async Submit** | `POST /api/async/submit/*` | Background task submission |
+| **WebSocket** | `WS /ws/submission/*` | Real-time progress updates |
+| **Analytics** | `GET /api/analytics/org/*`<br>`GET /api/analytics/participant/*` | Organizer & participant insights |
+
 ```mermaid
-graph LR
-    subgraph "Authentication"
-        A1[/api/auth/signup]
-        A2[/api/auth/login]
+flowchart TB
+    subgraph AUTH["🔐 Auth"]
+        A1["signup"]
+        A2["login"]
     end
     
-    subgraph "Core Operations"
-        B1[/api/dashboard/*]
-        B2[/api/developer/*]
-        B3[/api/team/*]
+    subgraph CORE["📋 Core"]
+        B1["dashboard"]
+        B2["developer"]
+        B3["team"]
     end
     
-    subgraph "Evaluation"
-        C1[/api/ppt/*]
-        C2[/api/github/*]
-        C3[/api/interview/*]
-        C4[/api/domain-evaluation/*]
+    subgraph EVAL["🎯 Evaluation"]
+        C1["ppt"]
+        C2["github"]
+        C3["interview"]
+        C4["domain"]
     end
     
-    subgraph "Async & Real-time"
-        D1[/api/async/submit/*]
-        D2[/ws/submission/*]
+    subgraph ASYNC["⚡ Async"]
+        D1["async submit"]
+        D2["websocket"]
     end
     
-    subgraph "Analytics"
-        E1[/api/analytics/org/*]
-        E2[/api/analytics/participant/*]
+    subgraph ANALYTICS["📊 Analytics"]
+        E1["org analytics"]
+        E2["participant"]
     end
+    
+    AUTH --> CORE
+    CORE --> EVAL
+    EVAL --> ASYNC
+    ASYNC --> ANALYTICS
 ```
 
 ---
@@ -520,24 +515,28 @@ sequenceDiagram
 
 ```mermaid
 graph TB
-    subgraph "Docker Compose Stack"
-        R[Redis 7<br/>Port: 6379]
-        M[MongoDB 7<br/>Port: 27017]
+    subgraph DOCKER["🐳 Docker Compose Stack"]
+        R["Redis 7<br/>Port: 6379"]
+        M["MongoDB 7<br/>Port: 27017"]
         
-        API[FastAPI App<br/>Port: 8000]
+        API["FastAPI App<br/>Port: 8000"]
         
-        W1[Celery Worker<br/>ppt_queue]
-        W2[Celery Worker<br/>github_queue]
-        W3[Celery Worker<br/>viva_queue]
+        W1["Celery: ppt_queue"]
+        W2["Celery: github_queue"]
+        W3["Celery: viva_queue"]
         
-        FL[Flower Dashboard<br/>Port: 5555]
+        FL["Flower<br/>Port: 5555"]
     end
     
     R <--> API
-    R <--> W1 & W2 & W3
+    R <--> W1
+    R <--> W2
+    R <--> W3
     R <--> FL
     M <--> API
-    M <--> W1 & W2 & W3
+    M <--> W1
+    M <--> W2
+    M <--> W3
 ```
 
 #### Container Health Checks
@@ -766,24 +765,29 @@ Each answer is scored 0-10 based on:
 EvalX includes **5 specialized evaluators** with **76 unique detection patterns** for accurate domain-specific assessment.
 
 ```mermaid
-graph TB
-    subgraph "Domain Detection"
-        R[Repository] --> D{Auto-Detect Domain}
-        D -->|Confidence > 50%| E[Domain Evaluator]
-        D -->|Low Confidence| M[Manual Selection]
+flowchart TB
+    subgraph DETECT["🔍 Domain Detection"]
+        R["Repository"] --> D{"Auto-Detect"}
+        D -->|"Confidence > 50%"| E["Domain Evaluator"]
+        D -->|"Low Confidence"| M["Manual Selection"]
+        M --> E
     end
     
-    subgraph "Specialized Evaluators"
-        E --> W3[Web3/Blockchain<br/>16 patterns]
-        E --> ML[ML/AI<br/>21 patterns]
-        E --> FT[Fintech<br/>16 patterns]
-        E --> IOT[IoT<br/>11 patterns]
-        E --> AR[AR/VR<br/>12 patterns]
+    subgraph EVALUATORS["🎯 Specialized Evaluators"]
+        E --> W3["Web3: 16 patterns"]
+        E --> ML["ML/AI: 21 patterns"]
+        E --> FT["Fintech: 16 patterns"]
+        E --> IOT["IoT: 11 patterns"]
+        E --> AR["AR/VR: 12 patterns"]
     end
     
-    subgraph "Output"
-        W3 & ML & FT & IOT & AR --> SC[Domain Score]
-        SC --> RP[Specialized Report]
+    subgraph OUTPUT["📊 Output"]
+        W3 --> SC["Domain Score"]
+        ML --> SC
+        FT --> SC
+        IOT --> SC
+        AR --> SC
+        SC --> RP["Specialized Report"]
     end
 ```
 
@@ -852,31 +856,54 @@ graph TB
 Comprehensive analytics for both organizers and participants.
 
 ```mermaid
-graph TB
-    subgraph "Data Collection"
-        S[Submissions] --> AG[MongoDB Aggregation]
-        E[Events] --> AG
-        T[Teams] --> AG
+flowchart TB
+    subgraph COLLECT["📥 Data Collection"]
+        S["Submissions"]
+        E["Events"]
+        T["Teams"]
+        AG["MongoDB Aggregation"]
+        S --> AG
+        E --> AG
+        T --> AG
     end
     
-    subgraph "Organizer Analytics"
-        AG --> OA1[AI Calibration Metrics]
-        AG --> OA2[Theme-wise Analysis]
-        AG --> OA3[Submission Heatmaps]
-        AG --> OA4[Anomaly Detection]
-        AG --> OA5[Historical Trends]
+    subgraph ORG["👨‍💼 Organizer Analytics"]
+        OA1["AI Calibration"]
+        OA2["Theme Analysis"]
+        OA3["Heatmaps"]
+        OA4["Anomaly Detection"]
+        OA5["Trends"]
     end
     
-    subgraph "Participant Analytics"
-        AG --> PA1[Skill Radar Chart]
-        AG --> PA2[Peer Comparison]
-        AG --> PA3[Progress Timeline]
+    subgraph PART["👨‍💻 Participant Analytics"]
+        PA1["Skill Radar"]
+        PA2["Peer Comparison"]
+        PA3["Progress Timeline"]
     end
     
-    subgraph "Export"
-        OA1 & OA2 & OA3 & OA4 & OA5 --> CSV[CSV Export]
-        PA1 & PA2 & PA3 --> PDF[PDF Report]
+    subgraph EXPORT["📤 Export"]
+        CSV["CSV Export"]
+        PDF["PDF Report"]
     end
+    
+    AG --> OA1
+    AG --> OA2
+    AG --> OA3
+    AG --> OA4
+    AG --> OA5
+    AG --> PA1
+    AG --> PA2
+    AG --> PA3
+    
+    OA1 --> CSV
+    OA2 --> CSV
+    OA3 --> CSV
+    OA4 --> CSV
+    OA5 --> CSV
+    
+    PA1 --> PDF
+    PA2 --> PDF
+    PA3 --> PDF
 ```
 
 ### Organizer Analytics Features

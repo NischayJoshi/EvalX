@@ -535,9 +535,6 @@ export default function EventSubmissions({
     );
   };
 
-  // ------------------------------
-  // MAIN RETURN UI
-  // ------------------------------
   return (
     <div className="space-y-6">
 

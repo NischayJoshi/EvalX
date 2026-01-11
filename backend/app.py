@@ -85,3 +85,4 @@ async def health_check():
         "status": "healthy",
         "service": "evalx-api"
     } 
+dsfcd 

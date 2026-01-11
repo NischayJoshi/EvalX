@@ -26,7 +26,6 @@ export default function EventTeams({ eventId: propEventId, event }) {
   const [teamToDelete, setTeamToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  // ---------------- FETCH TEAMS (AXIOS VERSION) ----------------
   const fetchTeams = useCallback(async () => {
     if (!eventId) return;
 
@@ -53,7 +52,6 @@ export default function EventTeams({ eventId: propEventId, event }) {
     fetchTeams();
   }, [fetchTeams]);
 
-  // ---------------- SUBMISSION COUNT MAP ----------------
   const submissionCountMap = useMemo(() => {
     const map = {};
 
@@ -71,7 +69,6 @@ export default function EventTeams({ eventId: propEventId, event }) {
     return map;
   }, [rounds, teams]);
 
-  // ---------------- SEARCH FILTER ----------------
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return teams;
@@ -93,7 +90,6 @@ export default function EventTeams({ eventId: propEventId, event }) {
     });
   }, [teams, query]);
 
-  // ---------------- DELETE TEAM ----------------
   function openConfirm(team) {
     setTeamToDelete(team);
     setConfirmOpen(true);
@@ -139,10 +135,6 @@ export default function EventTeams({ eventId: propEventId, event }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
-
-  // ----------------------------------------------------------
-  // -------------------------- UI ----------------------------
-  // ----------------------------------------------------------
 
   return (
     <div className="space-y-4">

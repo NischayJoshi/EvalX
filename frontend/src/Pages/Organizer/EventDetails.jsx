@@ -74,7 +74,7 @@ export default function EventDetails() {
   return (
     <div className="w-full">
 
-      {/* --- HEADER (FULL WIDTH) --- */}
+      {/* Header */}
       <div className="w-full bg-white border-b border-neutral-200 px-6 py-4 flex items-center gap-3 sticky top-0 z-20">
         <button
           onClick={() => navigate(-1)}
@@ -86,7 +86,7 @@ export default function EventDetails() {
         <h1 className="text-lg font-semibold tracking-tight">{event.name}</h1>
       </div>
 
-      {/* --- TABS (FULL WIDTH) --- */}
+      {/* Tabs */}
       <div className="
         w-full sticky top-[64px] z-10 bg-neutral-50 
         border-b border-neutral-200 
@@ -117,7 +117,7 @@ export default function EventDetails() {
         </div>
       </div>
 
-      {/* --- CONTENT (CENTERED 80%) --- */}
+      {/* Content */}
       <div className="w-full flex justify-center px-4">
         <div className="w-full max-w-6xl py-6">
 

@@ -1,11 +1,17 @@
 """
 EvalX Backend Application
 =========================
-Main FastAPI application with all routes registered (Merged khushi + main).
+
+Main FastAPI application with all routes registered.
+Includes analytics features from khushi branch and domain evaluators from main.
+
+Run with:
+    uvicorn app:app --reload --port 8000
 """
 
 import logging
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,13 +23,13 @@ from routes.developer import router as developer_router
 from routes.interview import router as interview_router
 from routes.team import router as team_router
 
-# Import MAIN branch routers
+# Import AI/evaluation routers (from main)
 from routes.ai_models.create_event import router as create_event_router
 from routes.domain_evaluation import router as domain_evaluation_router
 from graph.github import router as github_router
 from graph.ppt_evaluator import router as ppt_router
 
-# Import KHUSHI branch routers (New Features)
+# Import analytics router (from khushi)
 from routes.analytics import router as analytics_router
 
 # Configure logging
@@ -33,11 +39,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Application lifespan handler for startup/shutdown events."""
     logger.info("EvalX API starting up...")
     yield
     logger.info("EvalX API shutting down...")
+
 
 # Create FastAPI app
 app = FastAPI(
@@ -52,7 +61,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Configure appropriately for production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -68,27 +77,37 @@ app.include_router(developer_router, prefix="/api/developer", tags=["Developer"]
 app.include_router(interview_router, prefix="/api/interview", tags=["Interview"])
 app.include_router(team_router, prefix="/api/team", tags=["Team"])
 
-# Main Branch Exclusive Routes
+# AI & Evaluation Routes (from main)
 app.include_router(create_event_router, prefix="/api/ai", tags=["AI Models"])
 app.include_router(github_router, prefix="/api/github", tags=["GitHub"])
 app.include_router(ppt_router, prefix="/api/ppt", tags=["PPT Evaluator"])
-app.include_router(domain_evaluation_router, prefix="/api/domain-evaluation", tags=["Domain Evaluation"])
+app.include_router(
+    domain_evaluation_router,
+    prefix="/api/domain-evaluation",
+    tags=["Domain Evaluation"],
+)
 
-# Khushi Branch Exclusive Routes (Analytics)
+# Analytics Routes (from khushi)
 app.include_router(analytics_router, prefix="/api", tags=["Analytics"])
+
 
 @app.get("/", tags=["Health"])
 async def root():
+    """Health check endpoint."""
     return {"status": "ok", "message": "EvalX API is running", "version": "1.0.0"}
+
 
 @app.get("/api/health", tags=["Health"])
 async def health_check():
+    """Detailed health check."""
     return {
         "status": "healthy",
         "version": "1.0.0",
         "services": {"domain_evaluators": "active", "analytics": "active"},
     }
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -1,0 +1,228 @@
+/**
+ * Analytics Dashboard Styles
+ * ==========================
+ * 
+ * Custom CSS for analytics dashboard components.
+ * Import this in your main CSS or App.jsx if needed.
+ */
+
+/* Heatmap Cell Animation */
+.analytics-heatmap-cell {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.analytics-heatmap-cell:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  z-index: 10;
+}
+
+/* Radar Chart Container */
+.analytics-radar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Percentile Gauge Animation */
+@keyframes gauge-fill {
+  from {
+    stroke-dashoffset: 283;
+  }
+}
+
+.analytics-gauge-circle {
+  animation: gauge-fill 1s ease-out forwards;
+}
+
+/* Stat Card Hover Effects */
+.analytics-stat-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.analytics-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Chart Loading Skeleton */
+.analytics-skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Dark mode skeleton */
+.dark .analytics-skeleton {
+  background: linear-gradient(
+    90deg,
+    #2d3748 25%,
+    #374151 50%,
+    #2d3748 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* Bar Chart Animations */
+.analytics-bar {
+  transition: width 0.5s ease-out;
+}
+
+/* Score Distribution Bars */
+.analytics-distribution-bar {
+  transition: height 0.5s ease-out;
+}
+
+/* Trend Chart Gradient */
+.analytics-trend-gradient {
+  background: linear-gradient(
+    to bottom,
+    rgba(99, 102, 241, 0.2),
+    rgba(99, 102, 241, 0)
+  );
+}
+
+/* Theme Card Hover */
+.analytics-theme-card {
+  transition: all 0.2s ease;
+}
+
+.analytics-theme-card:hover {
+  background-color: rgba(99, 102, 241, 0.05);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Anomaly Item */
+.analytics-anomaly-item {
+  transition: background-color 0.2s ease;
+}
+
+.analytics-anomaly-item:hover {
+  background-color: rgba(99, 102, 241, 0.05);
+}
+
+/* Export Button Pulse */
+.analytics-export-btn:not(:disabled):hover {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .analytics-heatmap-cell {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  
+  .analytics-radar-container canvas {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Custom scrollbar for analytics sections */
+.analytics-scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 transparent;
+}
+
+.analytics-scrollable::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.analytics-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.analytics-scrollable::-webkit-scrollbar-thumb {
+  background-color: #6366f1;
+  border-radius: 3px;
+}
+
+.analytics-scrollable::-webkit-scrollbar-thumb:hover {
+  background-color: #4f46e5;
+}
+
+/* Tooltip Styles */
+.analytics-tooltip {
+  position: absolute;
+  padding: 8px 12px;
+  background: #1f2937;
+  color: white;
+  border-radius: 6px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+.analytics-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #1f2937 transparent transparent transparent;
+}
+
+/* Tab indicator animation */
+.analytics-tab-indicator {
+  transition: all 0.3s ease;
+}
+
+/* Grade Badge */
+.analytics-grade {
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+.analytics-grade-a {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.analytics-grade-b {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.analytics-grade-c {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.analytics-grade-d {
+  background: #fed7aa;
+  color: #9a3412;
+}
+
+.analytics-grade-f {
+  background: #fecaca;
+  color: #991b1b;
+}

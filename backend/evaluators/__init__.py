@@ -14,7 +14,7 @@ Supported Domains:
 
 Usage:
     from evaluators import DomainOrchestrator
-    
+
     orchestrator = DomainOrchestrator()
     results = await orchestrator.evaluate_repository(repo_path, metadata)
 

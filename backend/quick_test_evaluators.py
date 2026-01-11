@@ -23,11 +23,11 @@ def create_test_repo() -> Path:
     """Create a temporary test repository with Web3 code."""
     tmpdir = tempfile.mkdtemp(prefix="evalx_test_")
     repo_path = Path(tmpdir)
-    
+
     # Create contracts directory
     contracts_dir = repo_path / "contracts"
     contracts_dir.mkdir()
-    
+
     # Create a Solidity file with Web3 patterns
     sol_file = contracts_dir / "Token.sol"
     sol_file.write_text("""
@@ -75,7 +75,7 @@ contract MyToken is ERC20, ReentrancyGuard, Ownable {
     }
 }
     """)
-    
+
     # Create README
     readme = repo_path / "README.md"
     readme.write_text("""
@@ -103,7 +103,7 @@ The main contract is `Token.sol` which implements:
 - OpenZeppelin Contracts
 - Hardhat/Truffle for development
     """)
-    
+
     # Create package.json
     package = repo_path / "package.json"
     package.write_text("""
@@ -118,7 +118,7 @@ The main contract is `Token.sol` which implements:
     }
 }
     """)
-    
+
     return repo_path
 
 
@@ -127,41 +127,45 @@ async def run_tests():
     print("=" * 60)
     print("Domain Evaluators Quick Integration Test")
     print("=" * 60)
-    
+
     # Test 1: Registry
     print("\n[Test 1] Registry Initialization...")
     registry = get_registry()
     assert len(registry) == 5, "Registry should have 5 domains"
     print(f"  ✓ Registry loaded with {len(registry)} domains")
-    
+
     # Test 2: Get evaluators
     print("\n[Test 2] Evaluator Instantiation...")
     for domain in [DomainType.WEB3, DomainType.ML_AI, DomainType.FINTECH]:
         evaluator = registry.get_evaluator(domain)
         patterns = evaluator.get_patterns()
         print(f"  ✓ {domain.value}: {len(patterns)} patterns available")
-    
+
     # Test 3: Orchestrator
     print("\n[Test 3] Orchestrator Initialization...")
     orchestrator = DomainOrchestrator()
     supported = orchestrator.get_supported_domains()
     assert len(supported) == 5, "Orchestrator should support 5 domains"
     print(f"  ✓ Orchestrator supports: {[d.value for d in supported]}")
-    
+
     # Test 4: Create test repo and detect domain
     print("\n[Test 4] Domain Detection...")
     test_repo = create_test_repo()
     try:
         # Use detector_utils directly for testing
         from evaluators.detector_utils import detect_domain_from_files
+
         detected, confidence = detect_domain_from_files(str(test_repo))
         print(f"  ✓ Detected domain: {detected.value} with {confidence:.2%} confidence")
-        assert detected == DomainType.WEB3, f"Should detect Web3 domain, got {detected.value}"
+        assert detected == DomainType.WEB3, (
+            f"Should detect Web3 domain, got {detected.value}"
+        )
     finally:
         # Cleanup
         import shutil
+
         shutil.rmtree(test_repo, ignore_errors=True)
-    
+
     # Test 5: Pattern matching test
     print("\n[Test 5] Pattern Matching...")
     web3_evaluator = registry.get_evaluator(DomainType.WEB3)
@@ -180,17 +184,18 @@ async def run_tests():
         }
     }
     """
-    
+
     patterns = web3_evaluator.get_patterns()
     matches_found = 0
     for name, pattern_info in patterns.items():
         import re
+
         regex = pattern_info.get("regex", "")
         if re.search(regex, test_code, re.IGNORECASE | re.MULTILINE):
             matches_found += 1
-    
+
     print(f"  ✓ Found {matches_found} pattern matches in test code")
-    
+
     # Test 6: Evaluation info retrieval
     print("\n[Test 6] Evaluator Info...")
     info = registry.get_evaluator_info(DomainType.WEB3)
@@ -198,11 +203,11 @@ async def run_tests():
     assert "file_extensions" in info
     print(f"  ✓ Web3 evaluator info: {info['class_name']}")
     print(f"  ✓ Extensions: {info['file_extensions'][:5]}...")
-    
+
     print("\n" + "=" * 60)
     print("ALL TESTS PASSED! ✓")
     print("=" * 60)
-    
+
     return True
 
 

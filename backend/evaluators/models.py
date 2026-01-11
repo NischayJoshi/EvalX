@@ -24,17 +24,18 @@ from datetime import datetime
 class DomainType(str, Enum):
     """
     Enumeration of supported domain types for evaluation.
-    
+
     Each domain has specialized patterns, best practices, and scoring criteria
     that are applied during the evaluation process.
     """
+
     WEB3 = "web3"
     ML_AI = "ml_ai"
     FINTECH = "fintech"
     IOT = "iot"
     AR_VR = "ar_vr"
     UNKNOWN = "unknown"
-    
+
     @classmethod
     def from_string(cls, value: str) -> "DomainType":
         """Convert string to DomainType with fallback to UNKNOWN."""
@@ -60,7 +61,7 @@ class DomainType(str, Enum):
 class PatternMatch(BaseModel):
     """
     Represents a single pattern detection result within the codebase.
-    
+
     Attributes:
         pattern_name: Identifier for the detected pattern
         file_path: Relative path to the file containing the pattern
@@ -70,14 +71,12 @@ class PatternMatch(BaseModel):
         category: Classification category (security, architecture, etc.)
         severity: Impact level (info, low, medium, high, critical)
     """
+
     pattern_name: str = Field(..., description="Name of the detected pattern")
     file_path: str = Field(..., description="File where pattern was found")
     line_number: Optional[int] = Field(None, description="Line number (1-indexed)")
     confidence: float = Field(
-        default=1.0, 
-        ge=0.0, 
-        le=1.0, 
-        description="Detection confidence"
+        default=1.0, ge=0.0, le=1.0, description="Detection confidence"
     )
     context: Optional[str] = Field(None, description="Code context snippet")
     category: str = Field(default="general", description="Pattern category")
@@ -92,7 +91,7 @@ class PatternMatch(BaseModel):
                 "confidence": 0.95,
                 "context": "modifier nonReentrant() {",
                 "category": "security",
-                "severity": "high"
+                "severity": "high",
             }
         }
 
@@ -100,7 +99,7 @@ class PatternMatch(BaseModel):
 class DomainScore(BaseModel):
     """
     Detailed scoring breakdown for domain-specific evaluation.
-    
+
     Attributes:
         domain: The evaluated domain type
         overall_score: Aggregate domain score (0-100)
@@ -111,46 +110,26 @@ class DomainScore(BaseModel):
         completeness_score: Feature completeness assessment
         breakdown: Detailed category-wise scoring
     """
+
     domain: DomainType = Field(..., description="Evaluated domain")
-    overall_score: float = Field(
-        ..., 
-        ge=0, 
-        le=100, 
-        description="Overall domain score"
-    )
+    overall_score: float = Field(..., ge=0, le=100, description="Overall domain score")
     architecture_score: float = Field(
-        default=0.0, 
-        ge=0, 
-        le=100, 
-        description="Architecture quality"
+        default=0.0, ge=0, le=100, description="Architecture quality"
     )
     security_score: float = Field(
-        default=0.0, 
-        ge=0, 
-        le=100, 
-        description="Security adherence"
+        default=0.0, ge=0, le=100, description="Security adherence"
     )
     best_practices_score: float = Field(
-        default=0.0, 
-        ge=0, 
-        le=100, 
-        description="Best practices"
+        default=0.0, ge=0, le=100, description="Best practices"
     )
     innovation_score: float = Field(
-        default=0.0, 
-        ge=0, 
-        le=100, 
-        description="Innovation level"
+        default=0.0, ge=0, le=100, description="Innovation level"
     )
     completeness_score: float = Field(
-        default=0.0, 
-        ge=0, 
-        le=100, 
-        description="Feature completeness"
+        default=0.0, ge=0, le=100, description="Feature completeness"
     )
     breakdown: Dict[str, float] = Field(
-        default_factory=dict, 
-        description="Detailed scoring breakdown"
+        default_factory=dict, description="Detailed scoring breakdown"
     )
 
     def calculate_grade(self) -> str:
@@ -183,7 +162,7 @@ class DomainScore(BaseModel):
 class EvaluationMetadata(BaseModel):
     """
     Metadata about the evaluation run for tracking and auditing.
-    
+
     Attributes:
         evaluation_id: Unique identifier for this evaluation
         started_at: Timestamp when evaluation began
@@ -193,10 +172,10 @@ class EvaluationMetadata(BaseModel):
         patterns_checked: Number of patterns evaluated
         evaluator_version: Version of the evaluator used
     """
+
     evaluation_id: str = Field(..., description="Unique evaluation ID")
     started_at: datetime = Field(
-        default_factory=datetime.utcnow, 
-        description="Start timestamp"
+        default_factory=datetime.utcnow, description="Start timestamp"
     )
     completed_at: Optional[datetime] = Field(None, description="End timestamp")
     duration_ms: Optional[int] = Field(None, description="Duration in milliseconds")
@@ -208,10 +187,10 @@ class EvaluationMetadata(BaseModel):
 class DomainEvaluationResult(BaseModel):
     """
     Complete result of a domain-specific evaluation.
-    
+
     This is the primary output model containing all evaluation data,
     pattern matches, scores, recommendations, and metadata.
-    
+
     Attributes:
         detected_domain: Primary domain detected in the codebase
         secondary_domains: Additional domains with partial presence
@@ -224,44 +203,32 @@ class DomainEvaluationResult(BaseModel):
         metadata: Evaluation run metadata
         raw_analysis: Optional raw analysis data for debugging
     """
-    detected_domain: DomainType = Field(
-        ..., 
-        description="Primary detected domain"
-    )
+
+    detected_domain: DomainType = Field(..., description="Primary detected domain")
     secondary_domains: List[DomainType] = Field(
-        default_factory=list, 
-        description="Secondary domains detected"
+        default_factory=list, description="Secondary domains detected"
     )
     confidence: float = Field(
-        default=1.0, 
-        ge=0.0, 
-        le=1.0, 
-        description="Detection confidence"
+        default=1.0, ge=0.0, le=1.0, description="Detection confidence"
     )
     score: DomainScore = Field(..., description="Evaluation scoring")
     patterns_found: List[PatternMatch] = Field(
-        default_factory=list, 
-        description="Detected patterns"
+        default_factory=list, description="Detected patterns"
     )
     recommendations: List[str] = Field(
-        default_factory=list, 
-        description="Improvement recommendations"
+        default_factory=list, description="Improvement recommendations"
     )
     strengths: List[str] = Field(
-        default_factory=list, 
-        description="Identified strengths"
+        default_factory=list, description="Identified strengths"
     )
     weaknesses: List[str] = Field(
-        default_factory=list, 
-        description="Identified weaknesses"
+        default_factory=list, description="Identified weaknesses"
     )
     metadata: Optional[EvaluationMetadata] = Field(
-        None, 
-        description="Evaluation metadata"
+        None, description="Evaluation metadata"
     )
     raw_analysis: Optional[Dict[str, Any]] = Field(
-        None, 
-        description="Raw analysis data"
+        None, description="Raw analysis data"
     )
 
     def to_markdown_report(self) -> str:
@@ -282,38 +249,40 @@ class DomainEvaluationResult(BaseModel):
             f"- Completeness: {self.score.completeness_score:.1f}/100",
             "",
         ]
-        
+
         if self.strengths:
             report_lines.extend(["## Strengths", ""])
             for strength in self.strengths:
                 report_lines.append(f"- ✅ {strength}")
             report_lines.append("")
-        
+
         if self.weaknesses:
             report_lines.extend(["## Areas for Improvement", ""])
             for weakness in self.weaknesses:
                 report_lines.append(f"- ⚠️ {weakness}")
             report_lines.append("")
-        
+
         if self.recommendations:
             report_lines.extend(["## Recommendations", ""])
             for i, rec in enumerate(self.recommendations, 1):
                 report_lines.append(f"{i}. {rec}")
             report_lines.append("")
-        
+
         if self.patterns_found:
-            report_lines.extend([
-                "## Detected Patterns",
-                "",
-                f"Found {len(self.patterns_found)} domain-specific patterns:",
-                ""
-            ])
+            report_lines.extend(
+                [
+                    "## Detected Patterns",
+                    "",
+                    f"Found {len(self.patterns_found)} domain-specific patterns:",
+                    "",
+                ]
+            )
             for pattern in self.patterns_found[:10]:  # Limit to top 10
                 report_lines.append(
                     f"- **{pattern.pattern_name}** in `{pattern.file_path}` "
                     f"(confidence: {pattern.confidence * 100:.0f}%)"
                 )
-        
+
         return "\n".join(report_lines)
 
     class Config:
@@ -328,11 +297,11 @@ class DomainEvaluationResult(BaseModel):
                     "security_score": 75.0,
                     "best_practices_score": 80.0,
                     "innovation_score": 70.0,
-                    "completeness_score": 85.0
+                    "completeness_score": 85.0,
                 },
                 "recommendations": [
                     "Implement reentrancy guards in all external calls",
-                    "Add comprehensive unit tests for smart contracts"
-                ]
+                    "Add comprehensive unit tests for smart contracts",
+                ],
             }
         }

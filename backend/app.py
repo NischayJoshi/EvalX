@@ -29,7 +29,7 @@ app = FastAPI(
     description="Hackathon Evaluation Platform API",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 # CORS middleware
@@ -51,7 +51,11 @@ app.include_router(team_router, prefix="/api/team", tags=["Team"])
 app.include_router(create_event_router, prefix="/api/ai", tags=["AI Models"])
 app.include_router(github_router, prefix="/api/github", tags=["GitHub"])
 app.include_router(ppt_router, prefix="/api/ppt", tags=["PPT Evaluator"])
-app.include_router(domain_evaluation_router, prefix="/api/domain-evaluation", tags=["Domain Evaluation"])
+app.include_router(
+    domain_evaluation_router,
+    prefix="/api/domain-evaluation",
+    tags=["Domain Evaluation"],
+)
 
 
 @app.get("/", tags=["Health"])
@@ -66,12 +70,11 @@ async def health_check():
     return {
         "status": "healthy",
         "version": "1.0.0",
-        "services": {
-            "domain_evaluators": "active"
-        }
+        "services": {"domain_evaluators": "active"},
     }
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

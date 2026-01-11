@@ -39,10 +39,7 @@ from utils.serializers import serialize_doc
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(
-    prefix="/api/domain-evaluation",
-    tags=["Domain Evaluation"]
-)
+router = APIRouter(prefix="/api/domain-evaluation", tags=["Domain Evaluation"])
 
 # Initialize orchestrator (singleton)
 orchestrator = DomainOrchestrator()
@@ -52,17 +49,18 @@ orchestrator = DomainOrchestrator()
 # Request/Response Models
 # =============================================================================
 
+
 class DomainEvaluationRequest(BaseModel):
     """Request model for triggering domain evaluation."""
+
     submission_id: str = Field(..., description="MongoDB ObjectId of the submission")
     domain: Optional[str] = Field(
         None,
         description="Explicit domain to evaluate (web3, ml_ai, fintech, iot, ar_vr). "
-                    "If not provided, domain will be auto-detected."
+        "If not provided, domain will be auto-detected.",
     )
     force_reevaluate: bool = Field(
-        False,
-        description="Force re-evaluation even if domain evaluation exists"
+        False, description="Force re-evaluation even if domain evaluation exists"
     )
 
     class Config:
@@ -70,13 +68,14 @@ class DomainEvaluationRequest(BaseModel):
             "example": {
                 "submission_id": "507f1f77bcf86cd799439011",
                 "domain": "web3",
-                "force_reevaluate": False
+                "force_reevaluate": False,
             }
         }
 
 
 class DomainEvaluationResponse(BaseModel):
     """Response model for domain evaluation result."""
+
     success: bool
     message: str
     data: Optional[Dict[str, Any]] = None
@@ -89,23 +88,22 @@ class DomainEvaluationResponse(BaseModel):
                 "data": {
                     "detected_domain": "web3",
                     "confidence": 0.92,
-                    "score": {
-                        "overall": 78.5,
-                        "grade": "B+"
-                    }
-                }
+                    "score": {"overall": 78.5, "grade": "B+"},
+                },
             }
         }
 
 
 class SupportedDomainsResponse(BaseModel):
     """Response model for supported domains query."""
+
     domains: List[Dict[str, str]]
 
 
 # =============================================================================
 # API Endpoints
 # =============================================================================
+
 
 @router.post(
     "/evaluate",
@@ -126,46 +124,40 @@ class SupportedDomainsResponse(BaseModel):
     
     **Note**: This is a separate evaluation from the main GitHub code review.
     It provides additional domain-specific insights.
-    """
+    """,
 )
 async def trigger_domain_evaluation(
     request: DomainEvaluationRequest,
     background_tasks: BackgroundTasks,
-    user: dict = Depends(get_user)
+    user: dict = Depends(get_user),
 ):
     """
     Trigger domain-specific evaluation for a submission.
-    
+
     Args:
         request: Evaluation request with submission_id and optional domain
         background_tasks: FastAPI background tasks
         user: Authenticated user from JWT
-    
+
     Returns:
         DomainEvaluationResponse with evaluation results
-    
+
     Raises:
         HTTPException: If submission not found or evaluation fails
     """
     logger.info(f"Domain evaluation requested for submission: {request.submission_id}")
-    
+
     # Validate submission_id format
     try:
         submission_oid = ObjectId(request.submission_id)
     except Exception:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid submission_id format"
-        )
-    
+        raise HTTPException(status_code=400, detail="Invalid submission_id format")
+
     # Fetch submission
     submission = await db.submissions.find_one({"_id": submission_oid})
     if not submission:
-        raise HTTPException(
-            status_code=404,
-            detail="Submission not found"
-        )
-    
+        raise HTTPException(status_code=404, detail="Submission not found")
+
     # Check if already evaluated (unless force_reevaluate)
     existing_eval = submission.get("evaluation", {}).get("domain_evaluation")
     if existing_eval and not request.force_reevaluate:
@@ -175,18 +167,17 @@ async def trigger_domain_evaluation(
             data={
                 "detected_domain": existing_eval.get("detected_domain"),
                 "score": existing_eval.get("score"),
-                "already_evaluated": True
-            }
+                "already_evaluated": True,
+            },
         )
-    
+
     # Get repository URL from submission
     repo_url = submission.get("repo_url") or submission.get("github_url")
     if not repo_url:
         raise HTTPException(
-            status_code=400,
-            detail="Submission has no repository URL for evaluation"
+            status_code=400, detail="Submission has no repository URL for evaluation"
         )
-    
+
     # Parse domain if specified
     target_domain: Optional[DomainType] = None
     if request.domain:
@@ -198,35 +189,37 @@ async def trigger_domain_evaluation(
             raise HTTPException(
                 status_code=400,
                 detail=f"Invalid domain: {request.domain}. "
-                       f"Supported: web3, ml_ai, fintech, iot, ar_vr"
+                f"Supported: web3, ml_ai, fintech, iot, ar_vr",
             )
-    
+
     # Update submission status
     await db.submissions.update_one(
         {"_id": submission_oid},
         {
             "$set": {
                 "evaluation.domain_evaluation_status": "processing",
-                "evaluation.domain_evaluation_started_at": datetime.utcnow()
+                "evaluation.domain_evaluation_started_at": datetime.utcnow(),
             }
-        }
+        },
     )
-    
+
     # Run evaluation in background for long-running repos
     # For now, we'll return a synchronous response with simulated results
     # In production, this would clone the repo and run full analysis
-    
+
     try:
         # NOTE: In full implementation, this would:
         # 1. Clone the repository to a temp directory
         # 2. Run orchestrator.evaluate_repository(repo_path, domain)
         # 3. Store results
-        
+
         # For now, create a placeholder result structure
         # that demonstrates the integration pattern
-        
+
         evaluation_result = {
-            "detected_domain": target_domain.value if target_domain else "pending_detection",
+            "detected_domain": target_domain.value
+            if target_domain
+            else "pending_detection",
             "secondary_domains": [],
             "confidence": 0.85 if target_domain else 0.0,
             "score": {
@@ -237,13 +230,13 @@ async def trigger_domain_evaluation(
                 "innovation": 70.0,
                 "completeness": 74.0,
                 "grade": "B",
-                "breakdown": {}
+                "breakdown": {},
             },
             "patterns_found_count": 0,
             "patterns_summary": [],
             "recommendations": [
                 "Complete repository analysis pending",
-                "Clone and analyze for full domain evaluation"
+                "Clone and analyze for full domain evaluation",
             ],
             "strengths": [],
             "weaknesses": [],
@@ -252,10 +245,10 @@ async def trigger_domain_evaluation(
                 "duration_ms": 0,
                 "files_analyzed": 0,
                 "evaluated_at": datetime.utcnow().isoformat(),
-                "status": "placeholder"
-            }
+                "status": "placeholder",
+            },
         }
-        
+
         # Store result nested in submission
         await db.submissions.update_one(
             {"_id": submission_oid},
@@ -263,15 +256,15 @@ async def trigger_domain_evaluation(
                 "$set": {
                     "evaluation.domain_evaluation": evaluation_result,
                     "evaluation.domain_evaluation_status": "completed",
-                    "evaluation.domain_evaluation_completed_at": datetime.utcnow()
+                    "evaluation.domain_evaluation_completed_at": datetime.utcnow(),
                 }
-            }
+            },
         )
-        
+
         logger.info(
             f"Domain evaluation completed for submission {request.submission_id}"
         )
-        
+
         return DomainEvaluationResponse(
             success=True,
             message="Domain evaluation initiated successfully",
@@ -280,38 +273,38 @@ async def trigger_domain_evaluation(
                 "confidence": evaluation_result["confidence"],
                 "score": {
                     "overall": evaluation_result["score"]["overall"],
-                    "grade": evaluation_result["score"]["grade"]
+                    "grade": evaluation_result["score"]["grade"],
                 },
                 "note": "Full evaluation requires repository cloning. "
-                        "This is a placeholder structure."
-            }
+                "This is a placeholder structure.",
+            },
         )
-        
+
     except UnsupportedDomainError as e:
         logger.error(f"Unsupported domain error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
-    
+
     except RepositoryAccessError as e:
         logger.error(f"Repository access error: {str(e)}")
         await db.submissions.update_one(
             {"_id": submission_oid},
-            {"$set": {"evaluation.domain_evaluation_status": "error"}}
+            {"$set": {"evaluation.domain_evaluation_status": "error"}},
         )
         raise HTTPException(status_code=400, detail=str(e))
-    
+
     except DomainEvaluationError as e:
         logger.error(f"Domain evaluation error: {str(e)}")
         await db.submissions.update_one(
             {"_id": submission_oid},
-            {"$set": {"evaluation.domain_evaluation_status": "error"}}
+            {"$set": {"evaluation.domain_evaluation_status": "error"}},
         )
         raise HTTPException(status_code=500, detail=str(e))
-    
+
     except Exception as e:
         logger.exception(f"Unexpected error in domain evaluation: {str(e)}")
         await db.submissions.update_one(
             {"_id": submission_oid},
-            {"$set": {"evaluation.domain_evaluation_status": "error"}}
+            {"$set": {"evaluation.domain_evaluation_status": "error"}},
         )
         raise HTTPException(status_code=500, detail="Domain evaluation failed")
 
@@ -320,12 +313,12 @@ async def trigger_domain_evaluation(
     "/supported-domains",
     response_model=SupportedDomainsResponse,
     summary="Get Supported Domains",
-    description="Returns list of all supported domain types for evaluation."
+    description="Returns list of all supported domain types for evaluation.",
 )
 async def get_supported_domains():
     """
     Get list of supported domain types.
-    
+
     Returns:
         List of supported domains with descriptions
     """
@@ -333,30 +326,30 @@ async def get_supported_domains():
         {
             "id": "web3",
             "name": "Web3/Blockchain",
-            "description": "Smart contracts, DeFi, NFTs, blockchain infrastructure"
+            "description": "Smart contracts, DeFi, NFTs, blockchain infrastructure",
         },
         {
             "id": "ml_ai",
             "name": "ML/AI",
-            "description": "Machine learning, deep learning, MLOps, data science"
+            "description": "Machine learning, deep learning, MLOps, data science",
         },
         {
             "id": "fintech",
             "name": "Fintech",
-            "description": "Payment processing, banking, compliance, financial services"
+            "description": "Payment processing, banking, compliance, financial services",
         },
         {
             "id": "iot",
             "name": "IoT",
-            "description": "Internet of Things, embedded systems, device management"
+            "description": "Internet of Things, embedded systems, device management",
         },
         {
             "id": "ar_vr",
             "name": "AR/VR",
-            "description": "Augmented reality, virtual reality, 3D, spatial computing"
-        }
+            "description": "Augmented reality, virtual reality, 3D, spatial computing",
+        },
     ]
-    
+
     return SupportedDomainsResponse(domains=domains)
 
 
@@ -364,19 +357,16 @@ async def get_supported_domains():
     "/submission/{submission_id}",
     response_model=DomainEvaluationResponse,
     summary="Get Domain Evaluation Result",
-    description="Retrieve domain evaluation results for a specific submission."
+    description="Retrieve domain evaluation results for a specific submission.",
 )
-async def get_domain_evaluation(
-    submission_id: str,
-    user: dict = Depends(get_user)
-):
+async def get_domain_evaluation(submission_id: str, user: dict = Depends(get_user)):
     """
     Get domain evaluation results for a submission.
-    
+
     Args:
         submission_id: MongoDB ObjectId of the submission
         user: Authenticated user
-    
+
     Returns:
         Domain evaluation result if exists
     """
@@ -384,44 +374,43 @@ async def get_domain_evaluation(
         submission_oid = ObjectId(submission_id)
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid submission_id format")
-    
+
     submission = await db.submissions.find_one(
         {"_id": submission_oid},
-        {"evaluation.domain_evaluation": 1, "evaluation.domain_evaluation_status": 1}
+        {"evaluation.domain_evaluation": 1, "evaluation.domain_evaluation_status": 1},
     )
-    
+
     if not submission:
         raise HTTPException(status_code=404, detail="Submission not found")
-    
+
     domain_eval = submission.get("evaluation", {}).get("domain_evaluation")
-    status = submission.get("evaluation", {}).get("domain_evaluation_status", "not_started")
-    
+    status = submission.get("evaluation", {}).get(
+        "domain_evaluation_status", "not_started"
+    )
+
     if not domain_eval:
         return DomainEvaluationResponse(
             success=True,
             message=f"Domain evaluation status: {status}",
-            data={"status": status, "evaluation": None}
+            data={"status": status, "evaluation": None},
         )
-    
+
     return DomainEvaluationResponse(
         success=True,
         message="Domain evaluation retrieved successfully",
-        data={
-            "status": status,
-            "evaluation": domain_eval
-        }
+        data={"status": status, "evaluation": domain_eval},
     )
 
 
 @router.get(
     "/health",
     summary="Domain Evaluation Health Check",
-    description="Check if domain evaluation service is healthy."
+    description="Check if domain evaluation service is healthy.",
 )
 async def health_check():
     """
     Health check endpoint for domain evaluation service.
-    
+
     Returns:
         Service health status and supported domains count
     """
@@ -431,7 +420,7 @@ async def health_check():
             "status": "healthy",
             "service": "domain-evaluation",
             "supported_domains_count": len(supported_domains),
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except Exception as e:
         logger.error(f"Health check failed: {str(e)}")
@@ -439,5 +428,5 @@ async def health_check():
             "status": "unhealthy",
             "service": "domain-evaluation",
             "error": str(e),
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }

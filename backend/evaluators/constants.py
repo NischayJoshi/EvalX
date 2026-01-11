@@ -32,7 +32,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "high",
         "description": "Reentrancy protection mechanism to prevent recursive call attacks",
         "weight": 2.0,
-        "confidence": 0.95
+        "confidence": 0.95,
     },
     "access_control": {
         "regex": r"(onlyOwner|onlyAdmin|AccessControl|Ownable|hasRole\s*\(|grantRole|revokeRole)",
@@ -40,7 +40,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "high",
         "description": "Access control pattern for privileged operations",
         "weight": 1.8,
-        "confidence": 0.92
+        "confidence": 0.92,
     },
     "safe_math": {
         "regex": r"(SafeMath|unchecked\s*{|overflow|underflow|\.add\(|\.sub\(|\.mul\(|\.div\()",
@@ -48,7 +48,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "medium",
         "description": "Safe arithmetic operations to prevent overflow/underflow",
         "weight": 1.5,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
     "pausable_pattern": {
         "regex": r"(Pausable|whenNotPaused|whenPaused|_pause\(\)|_unpause\(\)|paused\s*\(\))",
@@ -56,7 +56,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "medium",
         "description": "Circuit breaker pattern for emergency stops",
         "weight": 1.4,
-        "confidence": 0.90
+        "confidence": 0.90,
     },
     "upgradeable_proxy": {
         "regex": r"(Proxy|Upgradeable|TransparentProxy|UUPS|initializer|__gap|_authorizeUpgrade)",
@@ -64,9 +64,8 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Upgradeable smart contract pattern",
         "weight": 1.3,
-        "confidence": 0.85
+        "confidence": 0.85,
     },
-    
     # DeFi Patterns
     "erc20_implementation": {
         "regex": r"(ERC20|IERC20|transfer\(|transferFrom\(|approve\(|allowance\(|balanceOf\()",
@@ -74,7 +73,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "ERC-20 token standard implementation",
         "weight": 1.2,
-        "confidence": 0.93
+        "confidence": 0.93,
     },
     "erc721_nft": {
         "regex": r"(ERC721|IERC721|tokenURI|ownerOf|safeTransferFrom|_mint\(|_safeMint\()",
@@ -82,7 +81,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "ERC-721 NFT standard implementation",
         "weight": 1.2,
-        "confidence": 0.93
+        "confidence": 0.93,
     },
     "erc1155_multitoken": {
         "regex": r"(ERC1155|IERC1155|balanceOfBatch|safeBatchTransferFrom|uri\()",
@@ -90,7 +89,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "ERC-1155 multi-token standard implementation",
         "weight": 1.2,
-        "confidence": 0.91
+        "confidence": 0.91,
     },
     "liquidity_pool": {
         "regex": r"(LiquidityPool|addLiquidity|removeLiquidity|swap\(|getReserves|k\s*=\s*x\s*\*\s*y)",
@@ -98,7 +97,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Automated Market Maker (AMM) liquidity pool pattern",
         "weight": 1.5,
-        "confidence": 0.87
+        "confidence": 0.87,
     },
     "flash_loan": {
         "regex": r"(flashLoan|FlashLoan|executeOperation|FLASHLOAN_PREMIUM|flashBorrower)",
@@ -106,7 +105,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "medium",
         "description": "Flash loan functionality implementation",
         "weight": 1.4,
-        "confidence": 0.89
+        "confidence": 0.89,
     },
     "staking_mechanism": {
         "regex": r"(stake\(|unstake\(|Staking|rewardRate|earned\(|getReward|stakingToken)",
@@ -114,9 +113,8 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Token staking and rewards mechanism",
         "weight": 1.3,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
-    
     # Blockchain Infrastructure
     "event_emission": {
         "regex": r"(emit\s+\w+\(|event\s+\w+\(|indexed\s+)",
@@ -124,7 +122,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Event emission for off-chain indexing and tracking",
         "weight": 1.0,
-        "confidence": 0.95
+        "confidence": 0.95,
     },
     "oracle_integration": {
         "regex": r"(Oracle|Chainlink|AggregatorV3|latestRoundData|priceFeed|getPrice\()",
@@ -132,7 +130,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Oracle integration for external data feeds",
         "weight": 1.4,
-        "confidence": 0.86
+        "confidence": 0.86,
     },
     "gas_optimization": {
         "regex": r"(calldata|memory|storage|immutable\s+|constant\s+|unchecked\s*{)",
@@ -140,7 +138,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Gas optimization techniques",
         "weight": 1.1,
-        "confidence": 0.80
+        "confidence": 0.80,
     },
     "signature_verification": {
         "regex": r"(ecrecover|ECDSA|signTypedData|EIP712|verifySignature|_hashTypedDataV4)",
@@ -148,7 +146,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "high",
         "description": "Cryptographic signature verification",
         "weight": 1.6,
-        "confidence": 0.90
+        "confidence": 0.90,
     },
     "timelock_pattern": {
         "regex": r"(Timelock|TimelockController|delay|queueTransaction|executeTransaction|eta)",
@@ -156,7 +154,7 @@ WEB3_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "medium",
         "description": "Timelock pattern for governance actions",
         "weight": 1.4,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
 }
 
@@ -172,7 +170,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "TensorFlow/Keras framework usage",
         "weight": 1.2,
-        "confidence": 0.95
+        "confidence": 0.95,
     },
     "pytorch_usage": {
         "regex": r"(import\s+torch|from\s+torch|torch\.|nn\.Module|torch\.nn)",
@@ -180,7 +178,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "PyTorch framework usage",
         "weight": 1.2,
-        "confidence": 0.95
+        "confidence": 0.95,
     },
     "sklearn_usage": {
         "regex": r"(from\s+sklearn|import\s+sklearn|sklearn\.|fit\(|predict\(|transform\()",
@@ -188,7 +186,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Scikit-learn library usage",
         "weight": 1.1,
-        "confidence": 0.93
+        "confidence": 0.93,
     },
     "huggingface_transformers": {
         "regex": r"(from\s+transformers|AutoModel|AutoTokenizer|pipeline\(|PreTrainedModel)",
@@ -196,9 +194,8 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Hugging Face Transformers library usage",
         "weight": 1.4,
-        "confidence": 0.94
+        "confidence": 0.94,
     },
-    
     # Model Architecture Patterns
     "neural_network_definition": {
         "regex": r"(class\s+\w+\(nn\.Module\)|Sequential\(|Dense\(|Linear\(|Conv2d\(|LSTM\(|GRU\()",
@@ -206,7 +203,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Neural network architecture definition",
         "weight": 1.5,
-        "confidence": 0.90
+        "confidence": 0.90,
     },
     "attention_mechanism": {
         "regex": r"(Attention|MultiHeadAttention|self_attention|cross_attention|softmax\(.*\/.*sqrt)",
@@ -214,7 +211,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Attention mechanism implementation",
         "weight": 1.6,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
     "transformer_architecture": {
         "regex": r"(Transformer|TransformerEncoder|TransformerDecoder|positional_encoding|LayerNorm)",
@@ -222,7 +219,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Transformer architecture components",
         "weight": 1.7,
-        "confidence": 0.89
+        "confidence": 0.89,
     },
     "cnn_architecture": {
         "regex": r"(Conv2d|Conv1d|MaxPool|AvgPool|BatchNorm|Dropout|Flatten)",
@@ -230,7 +227,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Convolutional Neural Network components",
         "weight": 1.3,
-        "confidence": 0.91
+        "confidence": 0.91,
     },
     "rnn_architecture": {
         "regex": r"(LSTM|GRU|RNN|hidden_state|cell_state|bidirectional|num_layers)",
@@ -238,9 +235,8 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Recurrent Neural Network components",
         "weight": 1.3,
-        "confidence": 0.90
+        "confidence": 0.90,
     },
-    
     # Training Pipeline Patterns
     "training_loop": {
         "regex": r"(for\s+epoch|optimizer\.step|loss\.backward|model\.train\(\)|train_loader)",
@@ -248,7 +244,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Model training loop implementation",
         "weight": 1.4,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
     "data_augmentation": {
         "regex": r"(RandomCrop|RandomFlip|RandomRotation|Augment|transforms\.Compose|albumentations)",
@@ -256,7 +252,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Data augmentation techniques",
         "weight": 1.2,
-        "confidence": 0.87
+        "confidence": 0.87,
     },
     "learning_rate_scheduler": {
         "regex": r"(lr_scheduler|StepLR|CosineAnnealing|ReduceLROnPlateau|WarmupScheduler|OneCycleLR)",
@@ -264,7 +260,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Learning rate scheduling strategy",
         "weight": 1.3,
-        "confidence": 0.89
+        "confidence": 0.89,
     },
     "early_stopping": {
         "regex": r"(EarlyStopping|patience|best_loss|early_stop|val_loss.*<.*best)",
@@ -272,7 +268,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Early stopping regularization",
         "weight": 1.2,
-        "confidence": 0.85
+        "confidence": 0.85,
     },
     "gradient_clipping": {
         "regex": r"(clip_grad_norm|clip_grad_value|max_norm|gradient_clip|torch\.nn\.utils\.clip)",
@@ -280,9 +276,8 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Gradient clipping for training stability",
         "weight": 1.1,
-        "confidence": 0.90
+        "confidence": 0.90,
     },
-    
     # MLOps Patterns
     "model_checkpointing": {
         "regex": r"(save_checkpoint|load_checkpoint|torch\.save|torch\.load|model\.save|ModelCheckpoint)",
@@ -290,7 +285,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Model checkpointing for training recovery",
         "weight": 1.3,
-        "confidence": 0.91
+        "confidence": 0.91,
     },
     "experiment_tracking": {
         "regex": r"(mlflow|wandb|tensorboard|SummaryWriter|log_metric|log_param|neptune)",
@@ -298,7 +293,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Experiment tracking and logging",
         "weight": 1.4,
-        "confidence": 0.92
+        "confidence": 0.92,
     },
     "model_versioning": {
         "regex": r"(dvc|MLflow\.register|model_registry|version.*model|ModelVersion)",
@@ -306,7 +301,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Model versioning and registry",
         "weight": 1.3,
-        "confidence": 0.85
+        "confidence": 0.85,
     },
     "hyperparameter_tuning": {
         "regex": r"(Optuna|hyperopt|GridSearch|RandomizedSearch|Ray\[tune\]|hparam|hyperparameter)",
@@ -314,9 +309,8 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Hyperparameter optimization",
         "weight": 1.4,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
-    
     # Inference Patterns
     "model_inference": {
         "regex": r"(model\.eval\(\)|torch\.no_grad|inference|predict_proba|model\.predict)",
@@ -324,7 +318,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Model inference implementation",
         "weight": 1.2,
-        "confidence": 0.89
+        "confidence": 0.89,
     },
     "model_quantization": {
         "regex": r"(quantize|int8|float16|mixed_precision|amp|torch\.quantization|TensorRT)",
@@ -332,7 +326,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Model quantization for efficiency",
         "weight": 1.3,
-        "confidence": 0.86
+        "confidence": 0.86,
     },
     "onnx_export": {
         "regex": r"(onnx|torch\.onnx|onnxruntime|export.*onnx|ONNX)",
@@ -340,7 +334,7 @@ ML_AI_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "ONNX model export for portability",
         "weight": 1.2,
-        "confidence": 0.90
+        "confidence": 0.90,
     },
 }
 
@@ -356,7 +350,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Payment gateway integration",
         "weight": 1.5,
-        "confidence": 0.93
+        "confidence": 0.93,
     },
     "payment_processing": {
         "regex": r"(process_payment|payment_method|card_number|cvv|expiry|billing_address)",
@@ -364,7 +358,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "medium",
         "description": "Payment processing logic",
         "weight": 1.4,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
     "recurring_billing": {
         "regex": r"(subscription|recurring|billing_cycle|invoice|auto_renew|plan_id)",
@@ -372,9 +366,8 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Subscription and recurring billing",
         "weight": 1.3,
-        "confidence": 0.87
+        "confidence": 0.87,
     },
-    
     # Security & Compliance
     "pci_compliance": {
         "regex": r"(PCI|tokenize|vault|card_token|sensitive_data|encrypt.*card|mask.*number)",
@@ -382,7 +375,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "critical",
         "description": "PCI-DSS compliance patterns",
         "weight": 2.0,
-        "confidence": 0.85
+        "confidence": 0.85,
     },
     "kyc_aml": {
         "regex": r"(KYC|AML|identity_verification|document_verification|sanctions|watchlist|PEP)",
@@ -390,7 +383,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "high",
         "description": "KYC/AML compliance implementation",
         "weight": 1.8,
-        "confidence": 0.86
+        "confidence": 0.86,
     },
     "fraud_detection": {
         "regex": r"(fraud|risk_score|anomaly|suspicious|velocity_check|device_fingerprint|behavioral)",
@@ -398,7 +391,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "high",
         "description": "Fraud detection mechanisms",
         "weight": 1.7,
-        "confidence": 0.84
+        "confidence": 0.84,
     },
     "transaction_security": {
         "regex": r"(idempotency|idempotent|transaction_id|double_spend|replay_attack|nonce)",
@@ -406,7 +399,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "high",
         "description": "Transaction security patterns",
         "weight": 1.6,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
     "encryption_at_rest": {
         "regex": r"(encrypt.*rest|AES|KMS|key_management|HSM|envelope_encryption|data_key)",
@@ -414,9 +407,8 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "high",
         "description": "Data encryption at rest",
         "weight": 1.7,
-        "confidence": 0.87
+        "confidence": 0.87,
     },
-    
     # Banking Patterns
     "account_management": {
         "regex": r"(account_balance|ledger|debit|credit|transfer|withdrawal|deposit)",
@@ -424,7 +416,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Banking account management",
         "weight": 1.4,
-        "confidence": 0.89
+        "confidence": 0.89,
     },
     "double_entry_bookkeeping": {
         "regex": r"(double_entry|ledger_entry|debit.*credit|journal_entry|contra_account)",
@@ -432,7 +424,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Double-entry bookkeeping system",
         "weight": 1.5,
-        "confidence": 0.82
+        "confidence": 0.82,
     },
     "transaction_ledger": {
         "regex": r"(transaction_log|audit_trail|immutable.*log|event_sourcing|CQRS)",
@@ -440,7 +432,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Transaction ledger and audit trail",
         "weight": 1.4,
-        "confidence": 0.85
+        "confidence": 0.85,
     },
     "interest_calculation": {
         "regex": r"(interest_rate|APR|APY|compound_interest|accrued_interest|amortization)",
@@ -448,9 +440,8 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Interest calculation logic",
         "weight": 1.2,
-        "confidence": 0.86
+        "confidence": 0.86,
     },
-    
     # Open Banking
     "open_banking_api": {
         "regex": r"(OpenBanking|PSD2|AISP|PISP|account_information|payment_initiation|consent)",
@@ -458,7 +449,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Open Banking API integration",
         "weight": 1.4,
-        "confidence": 0.84
+        "confidence": 0.84,
     },
     "plaid_integration": {
         "regex": r"(Plaid|plaid_client|link_token|access_token|institution_id|accounts/get)",
@@ -466,9 +457,8 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Plaid financial data integration",
         "weight": 1.3,
-        "confidence": 0.91
+        "confidence": 0.91,
     },
-    
     # Regulatory
     "regulatory_reporting": {
         "regex": r"(regulatory.*report|compliance.*report|SAR|CTR|Form.*8300|FinCEN)",
@@ -476,7 +466,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "medium",
         "description": "Regulatory reporting implementation",
         "weight": 1.5,
-        "confidence": 0.80
+        "confidence": 0.80,
     },
     "audit_logging": {
         "regex": r"(audit_log|audit.*trail|who.*what.*when|immutable.*record|compliance.*log)",
@@ -484,7 +474,7 @@ FINTECH_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "medium",
         "description": "Comprehensive audit logging",
         "weight": 1.4,
-        "confidence": 0.86
+        "confidence": 0.86,
     },
 }
 
@@ -500,7 +490,7 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "MQTT messaging protocol usage",
         "weight": 1.4,
-        "confidence": 0.92
+        "confidence": 0.92,
     },
     "coap_protocol": {
         "regex": r"(CoAP|coap|constrained.*application|aiocoap|coapthon)",
@@ -508,7 +498,7 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "CoAP protocol for constrained devices",
         "weight": 1.3,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
     "websocket_iot": {
         "regex": r"(WebSocket|ws://|wss://|socket\.io|real.*time.*device)",
@@ -516,9 +506,8 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "WebSocket for real-time device communication",
         "weight": 1.2,
-        "confidence": 0.85
+        "confidence": 0.85,
     },
-    
     # Device Management
     "device_provisioning": {
         "regex": r"(device_id|provision|registration|onboard|device_twin|shadow)",
@@ -526,7 +515,7 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Device provisioning and registration",
         "weight": 1.3,
-        "confidence": 0.86
+        "confidence": 0.86,
     },
     "ota_update": {
         "regex": r"(OTA|firmware.*update|over.*the.*air|bootloader|flash|upgrade)",
@@ -534,7 +523,7 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "medium",
         "description": "Over-the-Air update mechanism",
         "weight": 1.5,
-        "confidence": 0.84
+        "confidence": 0.84,
     },
     "device_telemetry": {
         "regex": r"(telemetry|sensor.*data|metrics|heartbeat|device.*status|health.*check)",
@@ -542,9 +531,8 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Device telemetry and monitoring",
         "weight": 1.3,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
-    
     # Sensor Integration
     "sensor_reading": {
         "regex": r"(read_sensor|temperature|humidity|pressure|accelerometer|gyroscope|GPIO)",
@@ -552,7 +540,7 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Sensor data reading implementation",
         "weight": 1.2,
-        "confidence": 0.87
+        "confidence": 0.87,
     },
     "actuator_control": {
         "regex": r"(actuator|motor|servo|relay|PWM|digital_write|analog_write)",
@@ -560,9 +548,8 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Actuator and motor control",
         "weight": 1.2,
-        "confidence": 0.86
+        "confidence": 0.86,
     },
-    
     # Security
     "device_authentication": {
         "regex": r"(X\.509|certificate|device.*cert|mutual.*TLS|mTLS|device.*key)",
@@ -570,7 +557,7 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "high",
         "description": "Device authentication using certificates",
         "weight": 1.6,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
     "secure_boot": {
         "regex": r"(secure.*boot|verified.*boot|signature.*verification|trusted.*execution)",
@@ -578,9 +565,8 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "high",
         "description": "Secure boot implementation",
         "weight": 1.7,
-        "confidence": 0.82
+        "confidence": 0.82,
     },
-    
     # Edge Computing
     "edge_processing": {
         "regex": r"(edge.*compute|local.*processing|fog.*computing|edge.*inference|gateway)",
@@ -588,7 +574,7 @@ IOT_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Edge computing and local processing",
         "weight": 1.4,
-        "confidence": 0.83
+        "confidence": 0.83,
     },
 }
 
@@ -604,7 +590,7 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Unity game engine usage",
         "weight": 1.3,
-        "confidence": 0.94
+        "confidence": 0.94,
     },
     "unreal_engine": {
         "regex": r"(Unreal|UObject|AActor|UActorComponent|UPROPERTY|UFUNCTION)",
@@ -612,7 +598,7 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Unreal Engine usage",
         "weight": 1.3,
-        "confidence": 0.93
+        "confidence": 0.93,
     },
     "webxr": {
         "regex": r"(WebXR|XRSession|XRFrame|navigator\.xr|immersive-vr|immersive-ar)",
@@ -620,9 +606,8 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "WebXR API for web-based XR",
         "weight": 1.4,
-        "confidence": 0.91
+        "confidence": 0.91,
     },
-    
     # 3D Rendering
     "3d_rendering": {
         "regex": r"(Mesh|Shader|Material|Texture|Render|Camera|Light|Scene)",
@@ -630,7 +615,7 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "3D rendering components",
         "weight": 1.2,
-        "confidence": 0.85
+        "confidence": 0.85,
     },
     "spatial_mapping": {
         "regex": r"(spatial.*map|mesh.*generation|environment.*scan|plane.*detection|anchor)",
@@ -638,9 +623,8 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Spatial mapping and environment understanding",
         "weight": 1.5,
-        "confidence": 0.84
+        "confidence": 0.84,
     },
-    
     # Input & Tracking
     "hand_tracking": {
         "regex": r"(hand.*tracking|gesture|finger.*position|palm|pinch|grab|hand.*model)",
@@ -648,7 +632,7 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Hand tracking and gesture recognition",
         "weight": 1.4,
-        "confidence": 0.86
+        "confidence": 0.86,
     },
     "head_tracking": {
         "regex": r"(head.*tracking|pose.*estimation|6DOF|3DOF|orientation|position.*tracking)",
@@ -656,7 +640,7 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Head and pose tracking",
         "weight": 1.3,
-        "confidence": 0.87
+        "confidence": 0.87,
     },
     "eye_tracking": {
         "regex": r"(eye.*tracking|gaze|foveated|pupil|fixation|saccade)",
@@ -664,9 +648,8 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Eye tracking functionality",
         "weight": 1.4,
-        "confidence": 0.85
+        "confidence": 0.85,
     },
-    
     # AR Specific
     "image_tracking": {
         "regex": r"(image.*target|marker.*tracking|ARImageAnchor|TrackedImage|reference.*image)",
@@ -674,7 +657,7 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Image target tracking for AR",
         "weight": 1.3,
-        "confidence": 0.88
+        "confidence": 0.88,
     },
     "object_occlusion": {
         "regex": r"(occlusion|depth.*buffer|z-buffer|environmental.*occlusion|people.*occlusion)",
@@ -682,9 +665,8 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "AR occlusion handling",
         "weight": 1.3,
-        "confidence": 0.84
+        "confidence": 0.84,
     },
-    
     # Performance
     "frame_optimization": {
         "regex": r"(frame.*rate|FPS|vsync|latency|motion.*sickness|reprojection|foveated.*render)",
@@ -692,7 +674,7 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "medium",
         "description": "Frame rate and latency optimization",
         "weight": 1.5,
-        "confidence": 0.82
+        "confidence": 0.82,
     },
     "lod_system": {
         "regex": r"(LOD|level.*of.*detail|distance.*culling|frustum.*cull|occlusion.*cull)",
@@ -700,7 +682,7 @@ AR_VR_PATTERNS: Dict[str, Dict[str, Any]] = {
         "severity": "info",
         "description": "Level of Detail optimization system",
         "weight": 1.3,
-        "confidence": 0.85
+        "confidence": 0.85,
     },
 }
 
@@ -728,23 +710,67 @@ DOMAIN_FILE_EXTENSIONS: Dict[str, list] = {
 # Domain keywords for auto-detection
 DOMAIN_KEYWORDS: Dict[str, list] = {
     "web3": [
-        "blockchain", "ethereum", "solidity", "smart contract", "defi",
-        "nft", "token", "wallet", "web3", "crypto", "decentralized"
+        "blockchain",
+        "ethereum",
+        "solidity",
+        "smart contract",
+        "defi",
+        "nft",
+        "token",
+        "wallet",
+        "web3",
+        "crypto",
+        "decentralized",
     ],
     "ml_ai": [
-        "machine learning", "deep learning", "neural network", "tensorflow",
-        "pytorch", "model", "training", "inference", "ai", "nlp", "computer vision"
+        "machine learning",
+        "deep learning",
+        "neural network",
+        "tensorflow",
+        "pytorch",
+        "model",
+        "training",
+        "inference",
+        "ai",
+        "nlp",
+        "computer vision",
     ],
     "fintech": [
-        "payment", "banking", "finance", "transaction", "kyc", "aml",
-        "compliance", "stripe", "fintech", "ledger", "accounting"
+        "payment",
+        "banking",
+        "finance",
+        "transaction",
+        "kyc",
+        "aml",
+        "compliance",
+        "stripe",
+        "fintech",
+        "ledger",
+        "accounting",
     ],
     "iot": [
-        "iot", "sensor", "device", "mqtt", "embedded", "raspberry pi",
-        "arduino", "gateway", "telemetry", "edge"
+        "iot",
+        "sensor",
+        "device",
+        "mqtt",
+        "embedded",
+        "raspberry pi",
+        "arduino",
+        "gateway",
+        "telemetry",
+        "edge",
     ],
     "ar_vr": [
-        "augmented reality", "virtual reality", "ar", "vr", "xr", "unity",
-        "unreal", "3d", "immersive", "headset", "spatial"
+        "augmented reality",
+        "virtual reality",
+        "ar",
+        "vr",
+        "xr",
+        "unity",
+        "unreal",
+        "3d",
+        "immersive",
+        "headset",
+        "spatial",
     ],
 }

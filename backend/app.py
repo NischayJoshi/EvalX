@@ -88,7 +88,11 @@ app.include_router(team_router, prefix="/api/team", tags=["Team"])
 app.include_router(create_event_router, prefix="/api/ai", tags=["AI Models"])
 app.include_router(github_router, prefix="/api/github", tags=["GitHub"])
 app.include_router(ppt_router, prefix="/api/ppt", tags=["PPT Evaluator"])
-app.include_router(domain_evaluation_router, prefix="/api/domain-evaluation", tags=["Domain Evaluation"])
+app.include_router(
+    domain_evaluation_router,
+    prefix="/api/domain-evaluation",
+    tags=["Domain Evaluation"],
+)
 
 # Analytics Routes (from khushi)
 app.include_router(analytics_router, prefix="/api", tags=["Analytics"])
@@ -121,4 +125,5 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

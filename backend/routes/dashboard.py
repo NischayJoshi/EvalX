@@ -68,7 +68,7 @@ async def create_event(
     summary: str = Form(""),
     description: str = Form(""),
     date: str = Form(...),
-    registrationDeadline: str = Form(...),  # NEW FIELD
+    registrationDeadline: str = Form(...),
     prize: str = Form(""),
     maxTeams: int = Form(...),
     minMembers: int = Form(...),
@@ -112,7 +112,7 @@ async def create_event(
             "summary": summary,
             "description": description,
             "date": date,
-            "registrationDeadline": registrationDeadline,  # NEW FIELD
+            "registrationDeadline": registrationDeadline,
             "prize": prize,
             "maxTeams": maxTeams,
             "minMembers": minMembers,

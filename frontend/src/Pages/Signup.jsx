@@ -61,7 +61,6 @@ export default function Signup() {
     transition: { duration: 0.35 }
   };
 
-  // FINAL SUBMIT
   const handleSubmit = async () => {
     setError("");
     setSuccess("");

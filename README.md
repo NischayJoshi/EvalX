@@ -91,46 +91,6 @@ graph LR
 | **Scale** | 50 teams max | Horizontally scalable |
 | **Domain Expertise** | Limited availability | 5 specialized evaluators |
 
-### User Journey
-
-```mermaid
-flowchart LR
-    subgraph Organizer["👨‍💼 Organizer Flow"]
-        O1[Create Event] --> O2[Set Criteria]
-        O2 --> O3[Invite Teams]
-        O3 --> O4[Monitor Progress]
-        O4 --> O5[View Analytics]
-        O5 --> O6[Export Results]
-    end
-    
-    subgraph Team["👨‍💻 Team Flow"]
-        T1[Join Event] --> T2[Upload PPT]
-        T2 --> T3[Submit GitHub]
-        T3 --> T4[Take Interview]
-        T4 --> T5[View Scores]
-        T5 --> T6[Read Feedback]
-    end
-    
-    subgraph System["⚡ EvalX Processing"]
-        S1[Validate Submission]
-        S2[Queue Evaluation]
-        S3[AI Processing]
-        S4[Generate Reports]
-        S5[Update Leaderboard]
-    end
-    
-    O3 -.->|"Event Link"| T1
-    T2 --> S1
-    T3 --> S1
-    T4 --> S1
-    S1 --> S2
-    S2 --> S3
-    S3 --> S4
-    S4 --> S5
-    S5 -.->|"Real-time"| T5
-    S5 -.->|"Analytics"| O4
-```
-
 ---
 
 ## 🏗️ System Architecture
@@ -486,20 +446,14 @@ graph LR
 ```mermaid
 sequenceDiagram
     participant C as Client
-    participant WS as WebSocket Server
+    participant WS as WebSocket
     participant W as Worker
     
-    C->>WS: Connect to /ws/submission/{id}
-    WS->>WS: Register connection
-    
-    loop Progress Updates
-        W->>WS: broadcast_update(id, status)
-        WS->>C: {"type": "progress", "stage": "analyzing"}
-    end
-    
-    W->>WS: broadcast_update(id, "complete")
-    WS->>C: {"type": "complete", "results": {...}}
-    C->>WS: Disconnect
+    C->>WS: Connect
+    W->>WS: Send status
+    WS->>C: Progress update
+    W->>WS: Complete
+    WS->>C: Final results
 ```
 
 #### WebSocket Message Types
@@ -515,28 +469,17 @@ sequenceDiagram
 
 ```mermaid
 graph TB
-    subgraph DOCKER["🐳 Docker Compose Stack"]
-        R["Redis 7<br/>Port: 6379"]
-        M["MongoDB 7<br/>Port: 27017"]
-        
-        API["FastAPI App<br/>Port: 8000"]
-        
-        W1["Celery: ppt_queue"]
-        W2["Celery: github_queue"]
-        W3["Celery: viva_queue"]
-        
-        FL["Flower<br/>Port: 5555"]
+    subgraph Docker[Docker Compose]
+        R[Redis] <--> API[FastAPI]
+        M[MongoDB] <--> API
+        R <--> W1[PPT Worker]
+        R <--> W2[GitHub Worker]
+        R <--> W3[Viva Worker]
+        M <--> W1
+        M <--> W2
+        M <--> W3
+        R <--> FL[Flower]
     end
-    
-    R <--> API
-    R <--> W1
-    R <--> W2
-    R <--> W3
-    R <--> FL
-    M <--> API
-    M <--> W1
-    M <--> W2
-    M <--> W3
 ```
 
 #### Container Health Checks
@@ -565,22 +508,11 @@ services:
 
 ```mermaid
 graph TD
-    subgraph "Task Execution"
-        T[Task Starts] --> E{Error?}
-        E -->|No| S[Success]
-        E -->|Yes| R{Retry Count}
-        R -->|< 2| W[Wait 60s]
-        W --> T
-        R -->|≥ 2| F[Mark Failed]
-        F --> N[Notify User]
-        F --> L[Log Error]
-    end
-    
-    subgraph "Graceful Degradation"
-        C{Cache Available?}
-        C -->|Yes| CR[Return Cached Result]
-        C -->|No| FP[Fallback Processing]
-    end
+    T[Task] --> E{Error}
+    E -->|No| S[Success]
+    E -->|Yes| R{Retries}
+    R -->|Under 2| W[Wait] --> T
+    R -->|Over 2| F[Failed] --> N[Notify]
 ```
 
 ### Retry Logic
@@ -594,18 +526,12 @@ graph TD
 
 ### Health Monitoring
 
-```mermaid
-graph LR
-    subgraph "Health Endpoints"
-        H1[GET /] --> R1[Basic Health Check]
-        H2[GET /api/health] --> R2[Detailed Service Status]
-    end
-    
-    subgraph "Monitoring"
-        FL[Celery Flower<br/>:5555] --> TM[Task Monitoring]
-        DC[Docker Health] --> CM[Container Status]
-    end
-```
+| Endpoint | Purpose |
+|----------|--------|
+| `GET /` | Basic health check |
+| `GET /api/health` | Detailed service status |
+| Celery Flower `:5555` | Task monitoring dashboard |
+| Docker Health | Container status checks |
 
 #### Health Check Response
 ```json
@@ -641,20 +567,10 @@ Analyzes presentation slides using GPT-4o-mini vision to evaluate communication 
 
 ```mermaid
 graph LR
-    subgraph "PPT Pipeline"
-        A[Upload PPTX] --> B[Extract Slides]
-        B --> C[Concurrent Analysis<br/>4 slides parallel]
-        C --> D[Score Computation]
-        D --> E[Mentor Report]
-    end
-    
-    subgraph "Scoring Dimensions"
-        S1[Clarity<br/>25%]
-        S2[Design<br/>25%]
-        S3[Storytelling<br/>25%]
-        S4[Completeness<br/>25%]
-    end
+    A[Upload] --> B[Extract] --> C[Analyze x4] --> D[Score] --> E[Report]
 ```
+
+**Scoring**: Clarity 25% | Design 25% | Storytelling 25% | Completeness 25%
 
 #### Scoring Formula
 ```
@@ -671,26 +587,8 @@ Overall Score    = (Clarity + Design + Story + Completeness) / 4
 9-phase deep technical analysis of code repositories.
 
 ```mermaid
-graph TD
-    subgraph "Phase 1-3: Collection"
-        P1[1. Clone Repository<br/>GitPython]
-        P2[2. Structure Analysis<br/>README, Tests, CI/CD]
-        P3[3. Static Analysis<br/>Radon + Pylint]
-    end
-    
-    subgraph "Phase 4-6: Analysis"
-        P4[4. Plagiarism Detection<br/>jscpd]
-        P5[5. Code Smell Detection<br/>Complexity, Quality]
-        P6[6. Risk Calculation<br/>Combined Metrics]
-    end
-    
-    subgraph "Phase 7-9: AI & Reporting"
-        P7[7. AI Code Review<br/>GPT-4o-mini]
-        P8[8. Final Scoring<br/>Weighted Formula]
-        P9[9. Report Generation<br/>Markdown + PDF]
-    end
-    
-    P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9
+graph LR
+    P1[Clone] --> P2[Structure] --> P3[Static] --> P4[Plagiarism] --> P5[Smells] --> P6[Risk] --> P7[AI Review] --> P8[Score] --> P9[Report]
 ```
 
 #### Final Score Calculation
@@ -719,36 +617,11 @@ Final Score = (100 - plagiarism) × 0.30
 Voice-based technical interview to verify understanding and detect potential plagiarism.
 
 ```mermaid
-sequenceDiagram
-    participant T as Team
-    participant FE as Interview Room
-    participant BE as Backend
-    participant W as Whisper
-    participant G as GPT-4o-mini
-    participant TTS as OpenAI TTS
-    
-    T->>FE: Upload Project PDF
-    FE->>BE: POST /interview/start
-    BE->>G: Generate 5 questions
-    G-->>BE: Questions array
-    BE-->>FE: Session created
-    
-    loop For each question (5 total)
-        BE->>TTS: Convert question to speech
-        TTS-->>FE: Audio stream
-        FE->>T: Play question audio
-        T->>FE: Record answer (voice)
-        FE->>BE: POST /interview/answer (audio)
-        BE->>W: Transcribe audio
-        W-->>BE: Transcript text
-        BE->>G: Evaluate answer (0-10)
-        G-->>BE: Score + feedback
-        BE-->>FE: Display result
-    end
-    
-    BE->>BE: Generate summary report
-    BE-->>FE: Final viva score & report
+graph LR
+    A[Upload PDF] --> B[Generate 5 Qs] --> C[Voice Q&A Loop] --> D[Transcribe] --> E[Evaluate] --> F[Final Report]
 ```
+
+**Flow**: Upload PDF → GPT generates questions → TTS plays audio → User answers → Whisper transcribes → GPT scores (0-10) → Repeat x5 → Final report
 
 #### Interview Scoring Criteria
 
@@ -765,31 +638,17 @@ Each answer is scored 0-10 based on:
 EvalX includes **5 specialized evaluators** with **76 unique detection patterns** for accurate domain-specific assessment.
 
 ```mermaid
-flowchart TB
-    subgraph DETECT["🔍 Domain Detection"]
-        R["Repository"] --> D{"Auto-Detect"}
-        D -->|"Confidence > 50%"| E["Domain Evaluator"]
-        D -->|"Low Confidence"| M["Manual Selection"]
-        M --> E
-    end
-    
-    subgraph EVALUATORS["🎯 Specialized Evaluators"]
-        E --> W3["Web3: 16 patterns"]
-        E --> ML["ML/AI: 21 patterns"]
-        E --> FT["Fintech: 16 patterns"]
-        E --> IOT["IoT: 11 patterns"]
-        E --> AR["AR/VR: 12 patterns"]
-    end
-    
-    subgraph OUTPUT["📊 Output"]
-        W3 --> SC["Domain Score"]
-        ML --> SC
-        FT --> SC
-        IOT --> SC
-        AR --> SC
-        SC --> RP["Specialized Report"]
-    end
+graph LR
+    R[Repo] --> D{Detect} --> E[Evaluator] --> S[Score] --> Report
 ```
+
+| Domain | Patterns | Focus Areas |
+|--------|----------|-------------|
+| **Web3/Blockchain** | 16 | Security, DeFi, Standards |
+| **ML/AI** | 21 | Frameworks, MLOps, Training |
+| **Fintech** | 16 | Payments, Compliance, Security |
+| **IoT** | 11 | Protocols, Device Mgmt, Edge |
+| **AR/VR** | 12 | Engines, Tracking, Performance |
 
 ### Evaluator Details
 
@@ -856,55 +715,14 @@ flowchart TB
 Comprehensive analytics for both organizers and participants.
 
 ```mermaid
-flowchart TB
-    subgraph COLLECT["📥 Data Collection"]
-        S["Submissions"]
-        E["Events"]
-        T["Teams"]
-        AG["MongoDB Aggregation"]
-        S --> AG
-        E --> AG
-        T --> AG
-    end
-    
-    subgraph ORG["👨‍💼 Organizer Analytics"]
-        OA1["AI Calibration"]
-        OA2["Theme Analysis"]
-        OA3["Heatmaps"]
-        OA4["Anomaly Detection"]
-        OA5["Trends"]
-    end
-    
-    subgraph PART["👨‍💻 Participant Analytics"]
-        PA1["Skill Radar"]
-        PA2["Peer Comparison"]
-        PA3["Progress Timeline"]
-    end
-    
-    subgraph EXPORT["📤 Export"]
-        CSV["CSV Export"]
-        PDF["PDF Report"]
-    end
-    
-    AG --> OA1
-    AG --> OA2
-    AG --> OA3
-    AG --> OA4
-    AG --> OA5
-    AG --> PA1
-    AG --> PA2
-    AG --> PA3
-    
-    OA1 --> CSV
-    OA2 --> CSV
-    OA3 --> CSV
-    OA4 --> CSV
-    OA5 --> CSV
-    
-    PA1 --> PDF
-    PA2 --> PDF
-    PA3 --> PDF
+graph LR
+    Data[Submissions + Events] --> Agg[MongoDB] --> Analytics --> Export[CSV/PDF]
 ```
+
+| For | Features |
+|-----|----------|
+| **Organizers** | AI Calibration, Theme Analysis, Heatmaps, Anomaly Detection, Trends → CSV |
+| **Participants** | Skill Radar, Peer Comparison, Progress Timeline → PDF |
 
 ### Organizer Analytics Features
 
